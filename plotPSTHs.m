@@ -38,11 +38,3 @@ end
 title(['Channel ' num2str(channel)])
 hold off
 
-
-    figure
-    plot(mean(repAvgPSTHs{i}(950:1100))*1000,'linewidth',2)
-    hold on
-    h = patch([(150+(i*50)) (150+(i*50)) (550+(i*50)) (550+(i*50))],[(.4+(i*spacer)) (2.4+(i*spacer)) (2.4+(i*spacer)) (.4+(i*spacer))],'b');
-    set(h, 'EdgeColor','none')
-    set(h, 'FaceAlpha',.3)
-    hold on

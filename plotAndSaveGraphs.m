@@ -1,4 +1,4 @@
-function plotAndSaveGraphs(fileList,indices, plotType,save)
+function plotAnddoSaveGraphs(fileList,indices, plotType,doSave)
 
 if strcmp(plotType,'heatmaps')
     for k = indices
@@ -91,7 +91,7 @@ if strcmp(plotType,'heatmaps')
             subplot(13,3,39)
             xlabel('Frequency (KHz)')
 
-            if save
+            if doSave
                 set(gcf,'position',[0,-1000,1200,1920]);
                 export_fig(['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}(1:72) fileList{k}(73:end-4) '-Heatmaps.png'])
                 close
@@ -110,9 +110,9 @@ elseif strcmp(plotType, 'heatmapDiff')
 %        Divisive(52:end,3) = 0.5:-.01:0.01;
         
         for k = indices
-        path = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
-        load(path, 'outerSeq','innerSeq')
-        [masterData,slaveData] = laserDelay_tuningCurve_firstAnalysis(path,'fast');
+            path = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
+            load(path, 'outerSeq','innerSeq')
+            [masterData,slaveData] = laserDelay_tuningCurve_firstAnalysis(path,'fast');
 
 
             figure
@@ -135,10 +135,120 @@ elseif strcmp(plotType, 'heatmapDiff')
             end
             subplot(8,2,1)
             title(fileList{k}(73:end))
-            if save
+            if doSave
                 set(gcf,'position',[0,-1000,1200,1920]);
 %                export_fig(['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}(1:72) fileList{k}(73:end-4) '-HeatmapDiff.png'])
                 export_fig(['C:\Users\polley_lab\Documents\MATLAB\Heatmaps\' fileList{k}(73:end-4) '-HeatmapDiff.png'])
+                close
+            end
+        end
+        
+elseif strcmp(plotType, 'smoothPSTHs')
+        scalingFactor = 1000/7;
+        
+        for k = indices
+            path = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
+            load(path, 'outerSeq','innerSeq')
+            [~,~,~,repPsthData,repPsthStdData] = laserDelay_tuningCurve_firstAnalysis(path,'smoothPSTH');
+            channels = 4;
+
+    % Pick a channel and average the PSTHs across repetitions
+            repPSTHs = repPsthData{channels};
+            repStdPSTHs = repPsthStdData{channels};
+            % Average the PSTHs for a given channel and each delay of all
+            % tones
+            for i = 1:17
+                for j = 1:8
+                    repNum(j) = size(repPSTHs{i,j},1);
+                end
+%                maxRepNum = max(repNum);
+%                repAvgPSTHs{i} = zeros(maxRepNum, size(repPSTHs{i,1},2));
+%                for j = 1:8
+%                    repAvgPSTHs{i} = repAvgPSTHs{i}+padarray(repPSTHs{i,j},maxRepNum-repNum(j),'post');
+%                end
+                minRepNum = min(repNum);
+                repAvgPSTHs{i} = zeros(minRepNum, size(repPSTHs{i,1},2));
+                for j = 1:8
+                    repAvgPSTHs{i} = repAvgPSTHs{i}+repPSTHs{i,j}(1:minRepNum,:);
+                end
+                repAvgPSTHs{i} = repAvgPSTHs{i}/j;
+            end
+            repAvgStdPSTHs = mean(mean(repStdPSTHs));
+            
+            figure
+            spacer = 3*repAvgStdPSTHs*scalingFactor;
+            hold on
+            for i =1:17
+                alpha = .8;
+                plot(squeeze(repAvgPSTHs{i}*scalingFactor)'+(i*spacer),'color',[0 0 0]+alpha)
+                plot(mean(repAvgPSTHs{i}*scalingFactor)+(i*spacer),'linewidth',2,'color',[0 0 0])
+                h = patch([(150+(i*50)) (150+(i*50)) (550+(i*50)) (550+(i*50))],[((-spacer/6)+(i*spacer)) ((spacer/1.4)+(i*spacer)) ((spacer/1.4)+(i*spacer)) ((-spacer/6)+(i*spacer))],'b');
+                set(h, 'EdgeColor','none')
+                set(h, 'FaceAlpha',.3)
+            end
+            y = get(gca,'YLim')
+            plot(1000*ones(y(2)+1,1),(y(1):y(2)),'--','linewidth',2)
+            plot(3000*ones(y(2)+1,1),(y(1):y(2)),'--r','linewidth',2)
+            title(['Channel ' num2str(channels)])
+            hold off
+                if doSave
+                set(gcf,'position',[0,-1000,1200,1920]);
+%                export_fig(['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}(1:72) fileList{k}(73:end-4) '-HeatmapDiff.png'])
+                export_fig(['C:\Users\polley_lab\Documents\MATLAB\PSTHs\' fileList{k}(73:end-4) '-PSTHs.png'])
+                close
+            end
+        end
+        
+elseif strcmp(plotType, 'PSTHs')
+        
+        for k = indices
+            path = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
+            load(path, 'outerSeq','innerSeq')
+            [~,~,~,repPsthData,repPsthStdData] = laserDelay_tuningCurve_firstAnalysis(path,'PSTH');
+            channels = 4;
+
+    % Pick a channel and average the PSTHs across repetitions
+            repPSTHs = repPsthData{channels};
+            repStdPSTHs = repPsthStdData{channels};
+            % Average the PSTHs for a given channel and each delay of all
+            % tones
+            for i = 1:17
+                for j = 1:8
+                    repNum(j) = size(repPSTHs{i,j},1);
+                end
+%                maxRepNum = max(repNum);
+%                repAvgPSTHs{i} = zeros(maxRepNum, size(repPSTHs{i,1},2));
+%                for j = 1:8
+%                    repAvgPSTHs{i} = repAvgPSTHs{i}+padarray(repPSTHs{i,j},maxRepNum-repNum(j),'post');
+%                end
+                minRepNum = min(repNum);
+                repAvgPSTHs{i} = zeros(minRepNum, size(repPSTHs{i,1},2));
+                for j = 1:8
+                    repAvgPSTHs{i} = repAvgPSTHs{i}+repPSTHs{i,j}(1:minRepNum,:);
+                end
+                repAvgPSTHs{i} = repAvgPSTHs{i}/j;
+            end
+            repAvgStdPSTHs = mean(mean(repStdPSTHs));
+            
+            figure
+            spacer = 3*repAvgStdPSTHs;
+            hold on
+            for i =1:17
+                alpha = .8;
+                plot(1:5:3500,mean(repAvgPSTHs{i})+(i*spacer),'k','linewidth',2)
+                h = patch([(150+(i*50)) (150+(i*50)) (550+(i*50)) (550+(i*50))],[((-spacer/6)+(i*spacer)) ((spacer/1.4)+(i*spacer)) ((spacer/1.4)+(i*spacer)) ((-spacer/6)+(i*spacer))],'b');
+                set(h, 'EdgeColor','none')
+                set(h, 'FaceAlpha',.3)
+            end
+            y = get(gca,'YLim')
+            plot(1000*ones(y(2)+1,1),(y(1):y(2)),'--','linewidth',2)
+            plot(3000*ones(y(2)+1,1),(y(1):y(2)),'--r','linewidth',2)
+            title(['Channel ' num2str(channels)])
+            hold off
+                if doSave
+                set(gcf,'position',[0,-1000,1200,1920]);
+%                export_fig(['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}(1:72) fileList{k}(73:end-4) '-HeatmapDiff.png'])
+                export_fig(['C:\Users\polley_lab\Documents\MATLAB\PSTHs\' fileList{k}(73:end-4) '-PSTHs.png'])
                 close
             end
         end

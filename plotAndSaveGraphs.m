@@ -233,7 +233,7 @@ elseif strcmp(plotType, 'PSTHs')
                 repAvgStdPSTHs = mean(mean(repStdPSTHs));
 
                 figure
-                spacer = 3*repAvgStdPSTHs;
+                spacer = 2*repAvgStdPSTHs;
                 hold on
                 for i =1:17
                     meanRepAvgPSTHs = mean(repAvgPSTHs{i});
@@ -269,11 +269,11 @@ elseif strcmp(plotType, 'PSTHs')
                 title(['Experiment: ' fileList{k}(73:end-4) ' - Channel ' num2str(ch) ])
                 hold off
                 if doSave
-                    if ~isdir(['C:\Users\polley_lab\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\' fileList{k}(73:81)])
-                        mkdir(['C:\Users\polley_lab\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\' fileList{k}(73:81)]);
+                    if ~isdir(['C:\Users\polley_lab\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\' fileList{k}(73:98) '\keep\'])
+                        mkdir(['C:\Users\polley_lab\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\' fileList{k}(73:98) '\keep\']);
                     end
                     set(gcf,'position',[0,-1000,1200,1920]);
-                    export_fig(['C:\Users\polley_lab\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\' fileList{k}(73:81) '\' fileList{k}(73:end-4) '-channel_' num2str(ch) '.png'])
+                    export_fig(['C:\Users\polley_lab\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\' fileList{k}(73:98) '\keep\' fileList{k}(73:end-4) '-channel_' num2str(ch) '.png'])
                     close
                 end
             end

@@ -1,4 +1,4 @@
-function summaryResponses = inclusionCriteria(fileList,indices)
+function [summaryResponses,startingBinExp] = inclusionCriteria(fileList,indices)
 % For each experiment passed to the function
 for k = indices
     path = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
@@ -13,10 +13,11 @@ for k = indices
         spntFR = mean(meanPSTHs(:,400:499),2);
         spntStd = std(meanPSTHs(:,400:499)');
         toneResponsive = [];
+        firstBinDelays = zeros(1,17);
         % For each delay on the channel
         for j = 1:length(innerSeq.master.values)
             points = 0;
-            firstBin = [];
+            firstBin = 0;
             startTracking = 0;
             win = 0;
             for johnnieWalker = 600:609
@@ -29,7 +30,7 @@ for k = indices
                 end
                 if (meanPSTHs(j,johnnieWalker)<=((3*spntStd(j))+spntFR(j))) && startTracking
                     points = 0;
-                    firstBin = [];
+                    firstBin = 0;
                     startTracking = 0;
                 end
                 if points >= 2
@@ -37,18 +38,44 @@ for k = indices
                     break
                 end
             end
-            if win && (mean(meanPSTHs(j,firstBin:firstBin+4))> ((3*spntStd(j))+spntFR(j)))
+            firstBinDelays(j) = firstBin;
+        end
+        
+        tmp = firstBinDelays;
+        tmp(firstBinDelays == 0) = [];
+        startingBin = mode(tmp);
+        clear tmp;
+        for j = 1:length(firstBinDelays)
+            if (~(firstBinDelays(j) == 0)) && (mean(meanPSTHs(j,startingBin:startingBin+4))> ((3*spntStd(j))+spntFR(j)))
                 toneResponsive(j) = 1;
-            else
+            else 
                 toneResponsive(j) = 0;
+                firstBinDelays(j) = 0;
             end
         end
+        tmp = firstBinDelays;
+        tmp(firstBinDelays == 0) = [];
+        startingBin = mode(tmp);
+        clear tmp;
+        for j = 1:length(firstBinDelays)
+            if (~(firstBinDelays(j) == 0)) && (mean(meanPSTHs(j,startingBin:startingBin+4))> ((3*spntStd(j))+spntFR(j)))
+                toneResponsive(j) = 1;
+            else 
+                toneResponsive(j) = 0;
+                firstBinDelays(j) = 0;
+            end
+        end
+        tmp = firstBinDelays;
+        tmp(firstBinDelays == 0) = [];
+        startingBin = mode(tmp);
+        clear tmp; 
         toneResponsiveChans(i,:) = toneResponsive;
+        startingBinChans(i) = startingBin;
     end
     toneResponsesChansExp{k} = toneResponsiveChans;
     toneResponsesExp = sum(toneResponsiveChans')';
+    startingBinExp(k,:) = startingBinChans;
     summaryResponses{k} = find(toneResponsesExp==17);
     clear toneResponsiveChans;
 end
             
-                

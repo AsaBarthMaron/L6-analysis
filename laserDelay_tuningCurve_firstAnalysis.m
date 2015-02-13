@@ -332,6 +332,7 @@ elseif strcmp(speed,'PSTH')
                 % Calculate and store the repetiton averaged PSTH for each
                 % delay/frequency combo.
                 % Store PSTHs for all 15 repetitions for each delay/frequency combo
+                PSTHs(j,f,:) = (mean(psth_t'));
                 repPSTHs(j,f) = {psth_t'};
                 repStdPSTHs(j,f) = std(psth_t(:));
                 clear fr fr_t raster_t psth_t
@@ -353,7 +354,7 @@ elseif strcmp(speed,'PSTH')
         % Cells containing data across all 16 channels
         masterData{chanCounter} = fra_values;
         masterSEMData{chanCounter} = fra_SEM;
-        psthData = [];
+        psthData{chanCounter} = PSTHs;
         repPsthData{chanCounter} = repPSTHs;
         repPsthStdData{chanCounter} = repStdPSTHs;
         chanCounter = chanCounter +1;

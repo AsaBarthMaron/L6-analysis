@@ -1,4 +1,4 @@
-function plotAnddoSaveGraphs(fileList,indices, plotType,doSave)
+function plotAnddoSaveGraphs(fileList,indices, channels, plotType,doSave)
 
 if strcmp(plotType,'heatmaps')
     for k = indices
@@ -205,51 +205,77 @@ elseif strcmp(plotType, 'PSTHs')
             path = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
             load(path, 'outerSeq','innerSeq')
             [~,~,~,repPsthData,repPsthStdData] = laserDelay_tuningCurve_firstAnalysis(path,'PSTH');
-            channels = 4;
+            for ch = channels';
 
-    % Pick a channel and average the PSTHs across repetitions
-            repPSTHs = repPsthData{channels};
-            repStdPSTHs = repPsthStdData{channels};
-            % Average the PSTHs for a given channel and each delay of all
-            % tones
-            for i = 1:17
-                for j = 1:8
-                    repNum(j) = size(repPSTHs{i,j},1);
+        % Pick a channel and average the PSTHs across repetitions
+                repPSTHs = repPsthData{ch};
+                repStdPSTHs = repPsthStdData{ch};
+                % Average the PSTHs for a given channel and each delay of all
+                % tones
+                for i = 1:17
+                    for j = 1:8
+                        repNum(j) = size(repPSTHs{i,j},1);
+                    end
+    %                maxRepNum = max(repNum);
+    %                repAvgPSTHs{i} = zeros(maxRepNum, size(repPSTHs{i,1},2));
+    %                for j = 1:8
+    %                    repAvgPSTHs{i} = repAvgPSTHs{i}+padarray(repPSTHs{i,j},maxRepNum-repNum(j),'post');
+    %                end
+                    % Exclude reps if they do not have a repeition for each
+                    % trial combination
+                    minRepNum = min(repNum);
+                    repAvgPSTHs{i} = zeros(minRepNum, size(repPSTHs{i,1},2));
+                    for j = 1:8
+                        repAvgPSTHs{i} = repAvgPSTHs{i}+repPSTHs{i,j}(1:minRepNum,:);
+                    end
+                    repAvgPSTHs{i} = repAvgPSTHs{i}/j;
                 end
-%                maxRepNum = max(repNum);
-%                repAvgPSTHs{i} = zeros(maxRepNum, size(repPSTHs{i,1},2));
-%                for j = 1:8
-%                    repAvgPSTHs{i} = repAvgPSTHs{i}+padarray(repPSTHs{i,j},maxRepNum-repNum(j),'post');
-%                end
-                minRepNum = min(repNum);
-                repAvgPSTHs{i} = zeros(minRepNum, size(repPSTHs{i,1},2));
-                for j = 1:8
-                    repAvgPSTHs{i} = repAvgPSTHs{i}+repPSTHs{i,j}(1:minRepNum,:);
+                repAvgStdPSTHs = mean(mean(repStdPSTHs));
+
+                figure
+                spacer = 3*repAvgStdPSTHs;
+                hold on
+                for i =1:17
+                    meanRepAvgPSTHs = mean(repAvgPSTHs{i});
+                    % Find spontaneous FR std (at 2000ms - bin 400)
+                    spntStd = std(meanRepAvgPSTHs(400:499));
+                    spntMean = mean(meanRepAvgPSTHs(400:499));
+                    tmp = zeros(1,3500);
+                    tmp(1:5:3500) = meanRepAvgPSTHs;
+                    tmp(2:5:3500) = meanRepAvgPSTHs;
+                    tmp(3:5:3500) = meanRepAvgPSTHs;
+                    tmp(4:5:3500) = meanRepAvgPSTHs;
+                    tmp(5:5:3500) = meanRepAvgPSTHs;
+                    meanTrace = tmp; clear tmp;
+          %          tmp = zeros(minRepNum,1,3500);
+         %           tmp(:,1:5:3500) = repAvgPSTHs{i}(1:minRepNum,:);
+        %            tmp(:,2:5:3500) = repAvgPSTHs{i}(1:minRepNum,:);
+       %             tmp(:,3:5:3500) = repAvgPSTHs{i}(1:minRepNum,:);
+      %              tmp(:,4:5:3500) = repAvgPSTHs{i}(1:minRepNum,:);
+     %               tmp(:,5:5:3500) = repAvgPSTHs{i}(1:minRepNum,:);
+    %                traces = tmp; clear tmp;
+                    alpha = .8;
+    %                plot(1:5:3500,meanRepAvgPSTHs+(i*spacer),'k','linewidth',2)
+     %               plot(squeeze(traces)'+(i*spacer),'color',[0 0 0]+alpha)
+                    plot(meanTrace+(i*spacer),'k','linewidth',2)
+                    plot(1:3500,3*spntStd*ones(3500,1)+(i*spacer)+spntMean,'k--')
+                    h = patch([(150+(i*50)) (150+(i*50)) (550+(i*50)) (550+(i*50))],[((-spacer/6)+(i*spacer)) ((spacer/1.4)+(i*spacer)) ((spacer/1.4)+(i*spacer)) ((-spacer/6)+(i*spacer))],'b');
+                    set(h, 'EdgeColor','none')
+                    set(h, 'FaceAlpha',.3)
                 end
-                repAvgPSTHs{i} = repAvgPSTHs{i}/j;
-            end
-            repAvgStdPSTHs = mean(mean(repStdPSTHs));
-            
-            figure
-            spacer = 3*repAvgStdPSTHs;
-            hold on
-            for i =1:17
-                alpha = .8;
-                plot(1:5:3500,mean(repAvgPSTHs{i})+(i*spacer),'k','linewidth',2)
-                h = patch([(150+(i*50)) (150+(i*50)) (550+(i*50)) (550+(i*50))],[((-spacer/6)+(i*spacer)) ((spacer/1.4)+(i*spacer)) ((spacer/1.4)+(i*spacer)) ((-spacer/6)+(i*spacer))],'b');
-                set(h, 'EdgeColor','none')
-                set(h, 'FaceAlpha',.3)
-            end
-            y = get(gca,'YLim')
-            plot(1000*ones(y(2)+1,1),(y(1):y(2)),'--','linewidth',2)
-            plot(3000*ones(y(2)+1,1),(y(1):y(2)),'--r','linewidth',2)
-            title(['Channel ' num2str(channels)])
-            hold off
+                y = get(gca,'YLim')
+                plot(1000*ones(y(2)+1,1),(y(1):y(2)),'--','linewidth',2)
+                plot(3000*ones(y(2)+1,1),(y(1):y(2)),'--r','linewidth',2)
+                title(['Experiment: ' fileList{k}(73:end-4) ' - Channel ' num2str(ch) ])
+                hold off
                 if doSave
-                set(gcf,'position',[0,-1000,1200,1920]);
-%                export_fig(['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}(1:72) fileList{k}(73:end-4) '-HeatmapDiff.png'])
-                export_fig(['C:\Users\polley_lab\Documents\MATLAB\PSTHs\' fileList{k}(73:end-4) '-PSTHs.png'])
-                close
+                    if ~isdir(['C:\Users\polley_lab\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\' fileList{k}(73:81)])
+                        mkdir(['C:\Users\polley_lab\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\' fileList{k}(73:81)]);
+                    end
+                    set(gcf,'position',[0,-1000,1200,1920]);
+                    export_fig(['C:\Users\polley_lab\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\' fileList{k}(73:81) '\' fileList{k}(73:end-4) '-channel_' num2str(ch) '.png'])
+                    close
+                end
             end
         end
 end

@@ -38,7 +38,7 @@
     
     figure
  
-    subplot = @(m,n,p) subtightplot (m, n, p, [0.01 0.03], [0.05 0.02], [0.05 0.02]);
+    subplot = @(m,n,p) subtightplot (m, n, p, [0.08 0.08], [0.05 0.06], [0.05 0.02]);
     subplot(2,2,1)
     for i =1:length(L23masterData)
         plot(mean(L23slaveData{i},2),mean(L23masterData{i},2),'k*')
@@ -48,6 +48,9 @@
     x = get(gca,'XLim')
     maxAx = max([x(2) y(2)])
     plot(1:maxAx,1:maxAx,'k--')
+    title('Layer 2/3')
+    xlabel('Tone alone')
+    ylabel('Tone + laser')
     
     subplot(2,2,2)
     for i =1:length(L4masterData)
@@ -58,6 +61,9 @@
     x = get(gca,'XLim')
     maxAx = max([x(2) y(2)])
     plot(1:maxAx,1:maxAx,'k--')
+    title('Layer 4')
+    xlabel('Tone alone')
+    ylabel('Tone + laser')
     
     subplot(2,2,3)
     for i =1:length(L5masterData)
@@ -68,6 +74,9 @@
     x = get(gca,'XLim')
     maxAx = max([x(2) y(2)])
     plot(1:maxAx,1:maxAx,'k--')
+    title('Layer 5')
+    xlabel('Tone alone')
+    ylabel('Tone + laser')
     
     subplot(2,2,4)
     for i =1:length(L6masterData)
@@ -78,3 +87,6 @@
     x = get(gca,'XLim')
     maxAx = max([x(2) y(2)])
     plot(1:maxAx,1:maxAx,'k--')
+    title('Layer 6')
+    xlabel('Tone alone')
+    ylabel('Tone + laser')

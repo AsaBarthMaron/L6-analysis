@@ -14,6 +14,7 @@ for k = indices
         spntStd = std(meanPSTHs(:,400:499)');
         toneResponsive = [];
         firstBinDelays = zeros(1,17);
+        startingBin = 0;
         % For each delay on the channel
         for j = 1:length(innerSeq.master.values)
             points = 0;
@@ -75,7 +76,7 @@ for k = indices
     toneResponsesChansExp{k} = toneResponsiveChans;
     toneResponsesExp = sum(toneResponsiveChans')';
     startingBinExp(k,:) = startingBinChans;
-    summaryResponses{k} = find(toneResponsesExp==17);
+    summaryResponses{k} = find(toneResponsesExp>=15);
     clear toneResponsiveChans;
 end
             

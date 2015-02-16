@@ -266,7 +266,7 @@ for k = indices;
         
     end
     subplot(13,3,1)
-    title(['Tone - ' fileList{k}(73:end-4)])
+    title('Tone - fileList{k}(73:end-4)')
     subplot(13,3,2)
   %  title('Tone + Laser')
     subplot(13,3,3)
@@ -278,13 +278,13 @@ for k = indices;
     subplot(13,3,39)
     xlabel('Frequency (KHz)')
     
-    if doSave
-        if ~isdir(['C:\Users\asa\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\' fileList{k}(73:98) '\'])
-            mkdir(['C:\Users\asa\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\' fileList{k}(73:98) '\']);
-        end
-        set(gcf,'position',[0,-1000,1200,1920]);
-        export_fig(['C:\Users\asa\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\'  fileList{k}(73:end-4) '-2ndRndHeatmap.png'])
-        close
-    end
+%     if doSave
+%         if ~isdir(['C:\Users\asa\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\' fileList{k}(73:98) '\'])
+%             mkdir(['C:\Users\asa\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\' fileList{k}(73:98) '\']);
+%         end
+%         set(gcf,'position',[0,-1000,1200,1920]);
+%         export_fig(['C:\Users\asa\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\'  fileList{k}(73:end-4) '-2ndRndHeatmap.png'])
+%         close
+%     end
 end
 

@@ -1,4 +1,4 @@
-function[masterData, slaveData, psthData,repPsthData,repPsthStdData] = laserDelay_tuningCurve_firstAnalysis(path,speed)
+function[masterData, slaveData, psthData,repPsthData,repPsthStdData] = laserDelay_tuningCurve_firstAnalysis(path,speed,binSize)
 
 load(path);
 
@@ -191,7 +191,7 @@ elseif strcmp(speed,'smoothPSTH')
                         fr_t(find(fr_t>3500)) = 3500;
                         tmpRaster = zeros(dacInt.SampleRate * (str2num(dacInt.TotalDuration)/10000),1);
                         tmpRaster(ceil(fr_t*(dacInt.SampleRate/10000))) = 1;
-                        psth_t(:,i) = downsample(quickPSTH(tmpRaster,70),10);
+                        psth_t(:,i) = downsample(quickPSTH(tmpRaster,binSize*10),10)*(1000/binSize);
                         clear  fr_t tmpRaster;
                     end
                 end
@@ -315,7 +315,7 @@ elseif strcmp(speed,'PSTH')
                         fr_t(find(fr_t>3500)) = 3500;
                         tmpRaster = zeros(dacInt.SampleRate * (str2num(dacInt.TotalDuration)/10000),1);
                         tmpRaster(ceil(fr_t*(dacInt.SampleRate/10000))) = 1;
-                        psth_t(:,i) = histc(find(tmpRaster>0),1:50:35000)*200;
+                        psth_t(:,i) = histc(find(tmpRaster>0),1:(binSize*10):35000)*(1000/binSize);
                         clear  fr_t tmpRaster;
                     end
                 end

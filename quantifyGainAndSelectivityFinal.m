@@ -79,35 +79,36 @@ end
 
 
 %% Calculate Laser PSTH
-meanL23psth = 0;
-meanL4psth = 0;
-meanL5psth = 0;
-meanL6psth = 0;
+L23psth = [];
+L4psth = [];
+L5psth = [];
+L6psth = [];
 
 for i =1:length(L23masterData)
-    meanL23psth = meanL23psth + squeeze(mean(L23psthData{i}(1,:,:),2));
+    L23psth(i,:) = squeeze(mean(L23psthData{i}(1,:,:),2));
 end
-meanL23psth = (meanL23psth-mean(meanL23psth(2000:2500)))/length(L23masterData);
+L23psth = (L23psth-mean(mean(L23psth(:,2000:2500))))./length(L23masterData);
 
 for i =1:length(L4masterData)
-    meanL4psth = meanL4psth + squeeze(mean(L4psthData{i}(1,:,:),2));
+    L4psth(i,:) = squeeze(mean(L4psthData{i}(1,:,:),2));
 end
-meanL4psth = (meanL4psth-mean(meanL4psth(2000:2500)))/length(L4masterData);
+L4psth = (L4psth-mean(mean(L4psth(:,2000:2500))))./length(L4masterData);
 
 for i =1:length(L5masterData)
-       meanL5psth = meanL5psth + squeeze(mean(L5psthData{i}(1,:,:),2));
+    L5psth(i,:) = squeeze(mean(L5psthData{i}(1,:,:),2));
 end
-meanL5psth =(meanL5psth-mean(meanL5psth(2000:2500)))/length(L5masterData);
+L5psth = (L5psth-mean(mean(L5psth(:,2000:2500))))./length(L5masterData);
 
 for i =1:length(L6masterData)
-    meanL6psth = meanL6psth + squeeze(mean(L6psthData{i}(1,:,:),2));
+   L6psth(i,:) = squeeze(mean(L6psthData{i}(1,:,:),2));
 end
-meanL6psth = (meanL6psth-mean(meanL6psth(2000:2500)))/length(L6masterData);
+L6psth = (L6psth-mean(mean(L6psth(:,2000:2500))))./length(L6masterData);
 
-meanL23psth = meanL23psth/max([meanL23psth;meanL4psth;meanL5psth;meanL6psth]);
-meanL4psth = meanL4psth/max([meanL23psth;meanL4psth;meanL5psth;meanL6psth]);
-meanL5psth = meanL5psth/max([meanL23psth;meanL4psth;meanL5psth;meanL6psth]);
-meanL6psth =  meanL6psth/max([meanL23psth;meanL4psth;meanL5psth;meanL6psth]);
+maxPsth = max(max([mean(L23psth);mean(L4psth);mean(L5psth);mean(L6psth)]));
+L23psth = L23psth./maxPsth;
+L4psth = L4psth./maxPsth;
+L5psth = L5psth./maxPsth;
+L6psth =  L6psth./maxPsth;
 
 %% Calculate ALDR/RLDR
 
@@ -268,22 +269,29 @@ L6ALDR(L6ALDR == inf) = NaN;
     semL23gainData = fliplr(std(L23gainData')/sqrt(size(L23gainData,2))');
     meanL23ALDR = fliplr(nanmean(L23ALDR,2)');
     semL23ALDR = fliplr((nanstd(L23ALDR'))/sqrt(size(L23ALDR,2)'));
-    
+    meanL23psth = mean(L23psth);
+    semL23psth = std(L23psth)/sqrt(size(L23psth,1));
     
     meanL4gainData = fliplr(mean(L4gainData,2)');
     semL4gainData = fliplr(std(L4gainData')/sqrt(size(L4gainData,2))');
     meanL4ALDR = fliplr(nanmean(L4ALDR,2)');
     semL4ALDR = fliplr((nanstd(L4ALDR'))/sqrt(size(L4ALDR,2)'));
+    meanL4psth = mean(L4psth);
+    semL4psth = std(L4psth)/sqrt(size(L4psth,1));
      
     meanL5gainData = fliplr(mean(L5gainData,2)');
     semL5gainData = fliplr(std(L5gainData')/sqrt(size(L5gainData,2))');
     meanL5ALDR = fliplr(nanmean(L5ALDR,2)');
     semL5ALDR = fliplr((nanstd(L5ALDR'))/sqrt(size(L5ALDR,2)'));
+    meanL5psth = mean(L5psth);
+    semL5psth = std(L5psth)/sqrt(size(L5psth,1));
     
     meanL6gainData = fliplr(mean(L6gainData,2)');
     semL6gainData = fliplr(std(L6gainData')/sqrt(size(L6gainData,2))');
     meanL6ALDR = fliplr(nanmean(L6ALDR,2)');
     semL6ALDR = fliplr((nanstd(L6ALDR'))/sqrt(size(L6ALDR,2)'));
+    meanL6psth = mean(L6psth);
+    semL6psth = std(L6psth)/sqrt(size(L6psth,1));
     
 
     
@@ -536,64 +544,68 @@ subplot(2,2,1)
 area([0:50:800,800:-50:0],[meanL23ALDR-semL23ALDR,meanL23ALDR(end:-1:1)+semL23ALDR(end:-1:1)],'facecolor',[ 0 alpha 0],'linestyle','none');
 hold on
 area([0:50:800,800:-50:0],[meanL23gainData-semL23gainData,meanL23gainData(end:-1:1)+semL23gainData(end:-1:1)],'facecolor',[ alpha 0 0],'linestyle','none');
+area([-100:1:800,800:-1:-100],[meanL23psth(100:1000)-semL23psth(100:1000),meanL23psth(1000:-1:100)+semL23psth(1000:-1:100)]*550,'facecolor',[0 0 1],'linestyle','none');
 % plot(0:50:800,fliplr(L23gainData')','color',[0 0 0]+alpha)
 plot(0:50:800,meanL23ALDR,'linewidth',3,'color',[0 .3 0])
 plot(0:50:800,meanL23gainData,'linewidth',3,'color',[.3 0 0])
-plot(-100:800,meanL23psth(100:1000)*300,'linewidth',2)
+plot(-100:800,meanL23psth(100:1000)*550,'linewidth',3,'color',[0 0 .3])
 plot(-100:50:800,zeros(19,1),'k--')
 title('Layer 2/3')
 xlabel('Tone onset (relative to laser onset)')
 ylabel('Gain')
 set(gca,'box','off')
-axis([-100 800 -100 300])
+axis([-100 800 -120 650])
 
 subplot = @(m,n,p) subtightplot (m, n, p, [0.08 0.05], [0.05 0.06], [0.05 0.02]);
 subplot(2,2,2)
 area([0:50:800,800:-50:0],[meanL4ALDR-semL4ALDR,meanL4ALDR(end:-1:1)+semL4ALDR(end:-1:1)],'facecolor',[ 0 alpha 0],'linestyle','none');
 hold on
 area([0:50:800,800:-50:0],[meanL4gainData-semL4gainData,meanL4gainData(end:-1:1)+semL4gainData(end:-1:1)],'facecolor',[ alpha 0 0],'linestyle','none');
+area([-100:1:800,800:-1:-100],[meanL4psth(100:1000)-semL4psth(100:1000),meanL4psth(1000:-1:100)+semL4psth(1000:-1:100)]*550,'facecolor',[0 0 1],'linestyle','none');
 % plot(0:50:800,fliplr(L4gainData')','color',[0 0 0]+alpha)
 plot(0:50:800,meanL4ALDR,'linewidth',3,'color',[0 .3 0])
 plot(0:50:800,meanL4gainData,'linewidth',3,'color',[.3 0 0])
-plot(-100:800,meanL4psth(100:1000)*300,'linewidth',2)
+plot(-100:800,meanL4psth(100:1000)*550,'linewidth',3,'color',[0 0 .3])
 plot(-100:50:800,zeros(19,1),'k--')
 title('Layer 4')
 xlabel('Tone onset (relative to laser onset)')
 ylabel('Gain')
 set(gca,'box','off')
-axis([-100 800 -100 300])
+axis([-100 800 -120 650])
 
 subplot = @(m,n,p) subtightplot (m, n, p, [0.08 0.05], [0.05 0.06], [0.05 0.02]);
 subplot(2,2,3)
 area([0:50:800,800:-50:0],[meanL5ALDR-semL5ALDR,meanL5ALDR(end:-1:1)+semL5ALDR(end:-1:1)],'facecolor',[ 0 alpha 0],'linestyle','none');
 hold on
 area([0:50:800,800:-50:0],[meanL5gainData-semL5gainData,meanL5gainData(end:-1:1)+semL5gainData(end:-1:1)],'facecolor',[ alpha 0 0],'linestyle','none');
+area([-100:1:800,800:-1:-100],[meanL5psth(100:1000)-semL5psth(100:1000),meanL5psth(1000:-1:100)+semL5psth(1000:-1:100)]*550,'facecolor',[0 0 1],'linestyle','none');
 % plot(0:50:800,fliplr(L5gainData')','color',[0 0 0]+alpha)
 plot(0:50:800,meanL5ALDR,'linewidth',3,'color',[0 .3 0])
 plot(0:50:800,meanL5gainData,'linewidth',3,'color',[.3 0 0])
-plot(-100:800,meanL5psth(100:1000)*300,'linewidth',2)
+plot(-100:800,meanL5psth(100:1000)*550,'linewidth',3,'color',[0 0 .3])
 plot(-100:50:800,zeros(19,1),'k--')
 title('Layer 5')
 xlabel('Tone onset (relative to laser onset)')
 ylabel('Gain')
 set(gca,'box','off')
-axis([-100 800 -100 300])
+axis([-100 800 -150 650])
 
 subplot = @(m,n,p) subtightplot (m, n, p, [0.08 0.05], [0.05 0.06], [0.05 0.02]);
 subplot(2,2,4)
 area([0:50:800,800:-50:0],[meanL6ALDR-semL6ALDR,meanL6ALDR(end:-1:1)+semL6ALDR(end:-1:1)],'facecolor',[ 0 alpha 0],'linestyle','none');
 hold on
 area([0:50:800,800:-50:0],[meanL6gainData-semL6gainData,meanL6gainData(end:-1:1)+semL6gainData(end:-1:1)],'facecolor',[ alpha 0 0],'linestyle','none');
+area([-100:1:800,800:-1:-100],[meanL6psth(100:1000)-semL6psth(100:1000),meanL6psth(1000:-1:100)+semL6psth(1000:-1:100)]*550,'facecolor',[0 0 1],'linestyle','none');
 % plot(0:50:800,fliplr(L6gainData')','color',[0 0 0]+alpha)
 plot(0:50:800,meanL6ALDR,'linewidth',3,'color',[0 .3 0])
 plot(0:50:800,meanL6gainData,'linewidth',3,'color',[.3 0 0])
-plot(-100:800,meanL6psth(100:1000)*300,'linewidth',2)
+plot(-100:800,meanL6psth(100:1000)*550,'linewidth',3,'color',[0 0 .3])
 plot(-100:50:800,zeros(19,1),'k--')
 title('Layer 6')
 xlabel('Tone onset (relative to laser onset)')
 ylabel('Gain')
 set(gca,'box','off')
-axis([-100 800 -100 300])
+axis([-100 800 -120 650])
 
 % figure
 % 

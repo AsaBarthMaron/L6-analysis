@@ -2,7 +2,7 @@ function [masterDataExp,slaveDataExp] = laserDelay_tuningCurve_secondAnalysisTte
 fileList = descendingFileList('modLaserdelay');
 
 for k = indices;
-    path = ['C:\Users\asa\Documents\MATLAB\' fileList{k}];
+    path = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
     load(path);
     
     % Define start and end points
@@ -268,7 +268,7 @@ for k = indices;
     subplot(13,3,1)
     title(['Tone - ' fileList{k}(73:end-4)])
     subplot(13,3,2)
-  %  title('Tone + Laser')
+    title('Tone + Laser')
     subplot(13,3,3)
     title('Difference')
     subplot(13,3,37)
@@ -279,11 +279,11 @@ for k = indices;
     xlabel('Frequency (KHz)')
     
     if doSave
-        if ~isdir(['C:\Users\asa\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\' fileList{k}(73:98) '\'])
-            mkdir(['C:\Users\asa\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\' fileList{k}(73:98) '\']);
+        if ~isdir(['C:\Users\polley_lab\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\' fileList{k}(73:98) '\'])
+            mkdir(['C:\Users\polley_lab\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\' fileList{k}(73:98) '\']);
         end
-        set(gcf,'position',[0,-1000,1200,1920]);
-        export_fig(['C:\Users\asa\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\'  fileList{k}(73:end-4) '-2ndRndHeatmap.png'])
+       % set(gcf,'position',[0,-1000,1200,1920]);
+        save(['C:\Users\polley_lab\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\'  fileList{k}(73:end-4) '-2ndRndHeatmap.fig'])
         close
     end
 end

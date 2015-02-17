@@ -34,19 +34,26 @@ for k = indices
         spntFR = meanPSTHs(:,2970:2999);
         toneFR = meanPSTHs(:,3016:3045);
         
-        for j = 1:length(innerSeq.master.values)
-            [H,P] = ttest2(spntFR(j,:),toneFR(j,:),.05,'left');
+        j=1;
+        for h = 1:2:16
+            [H,P] = ttest2(mean([spntFR(h,:);spntFR(h+1,:)]),mean([toneFR(h,:);toneFR(h+1,:)]),.05,'left');
             toneResponsive(j) = H;
             pVals(j) = P;
+            j = j+1;
             clear P H;
         end
+        [H,P] = ttest2(mean([spntFR(16,:);spntFR(16+1,:)]),mean([toneFR(16,:);toneFR(16+1,:)]),.05,'left');
+        toneResponsive(9) = H;
+        pVals(9) = P;   
+        clear P H;
+        
         toneResponsiveChans(i,:) = toneResponsive;
         pValsChans(i,:) = pVals;
         clear toneResponsive pVals;
     end
     toneResponsesChansExp{k} = toneResponsiveChans;
     toneResponsesExp = sum(toneResponsiveChans')';
-    summaryResponses{k} = find(toneResponsesExp>=16);
+    summaryResponses{k} = find(toneResponsesExp>=9);
     pValsChansExp{k} = pValsChans;
     clear toneResponsiveChans pValsChans;
 end

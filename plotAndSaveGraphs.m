@@ -2,7 +2,7 @@ function plotAnddoSaveGraphs(fileList,indices, channels, plotType,doSave)
 
 if strcmp(plotType,'heatmaps')
     for k = indices
-        path = ['C:\Users\asa\Documents\MATLAB\' fileList{k}];
+        path = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
         load(path, 'outerSeq','innerSeq')
         [masterData,slaveData] = laserDelay_tuningCurve_firstAnalysis(path,'fast');
         
@@ -93,7 +93,7 @@ if strcmp(plotType,'heatmaps')
         
         if doSave
             set(gcf,'position',[0,-1000,1200,1920]);
-            export_fig(['C:\Users\asa\Documents\MATLAB\' fileList{k}(1:72) fileList{k}(73:end-4) '-Heatmaps.png'])
+            export_fig(['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}(1:72) fileList{k}(73:end-4) '-Heatmaps.png'])
             close
         end
     end
@@ -110,7 +110,7 @@ elseif strcmp(plotType, 'heatmapDiff')
     %        Divisive(52:end,3) = 0.5:-.01:0.01;
     
     for k = indices
-        path = ['C:\Users\asa\Documents\MATLAB\' fileList{k}];
+        path = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
         load(path, 'outerSeq','innerSeq')
         [masterData,slaveData] = laserDelay_tuningCurve_firstAnalysis(path,'fast');
         
@@ -137,8 +137,8 @@ elseif strcmp(plotType, 'heatmapDiff')
         title(fileList{k}(73:end))
         if doSave
             set(gcf,'position',[0,-1000,1200,1920]);
-            %                export_fig(['C:\Users\asa\Documents\MATLAB\' fileList{k}(1:72) fileList{k}(73:end-4) '-HeatmapDiff.png'])
-            export_fig(['C:\Users\asa\Documents\MATLAB\Heatmaps\' fileList{k}(73:end-4) '-HeatmapDiff.png'])
+            %                export_fig(['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}(1:72) fileList{k}(73:end-4) '-HeatmapDiff.png'])
+            export_fig(['C:\Users\polley_lab\Documents\MATLAB\Heatmaps\' fileList{k}(73:end-4) '-HeatmapDiff.png'])
             close
         end
     end
@@ -147,7 +147,7 @@ elseif strcmp(plotType, 'smoothPSTHs')
     scalingFactor = 1000/7;
     
     for k = indices
-        path = ['C:\Users\asa\Documents\MATLAB\' fileList{k}];
+        path = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
         load(path, 'outerSeq','innerSeq')
         [~,~,~,repPsthData,repPsthStdData] = laserDelay_tuningCurve_firstAnalysis(path,'smoothPSTH');
         channels = 4;
@@ -193,8 +193,8 @@ elseif strcmp(plotType, 'smoothPSTHs')
         hold off
         if doSave
             set(gcf,'position',[0,-1000,1200,1920]);
-            %                export_fig(['C:\Users\asa\Documents\MATLAB\' fileList{k}(1:72) fileList{k}(73:end-4) '-HeatmapDiff.png'])
-            export_fig(['C:\Users\asa\Documents\MATLAB\PSTHs\' fileList{k}(73:end-4) '-PSTHs.png'])
+            %                export_fig(['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}(1:72) fileList{k}(73:end-4) '-HeatmapDiff.png'])
+            export_fig(['C:\Users\polley_lab\Documents\MATLAB\PSTHs\' fileList{k}(73:end-4) '-PSTHs.png'])
             close
         end
     end
@@ -202,7 +202,7 @@ elseif strcmp(plotType, 'smoothPSTHs')
 elseif strcmp(plotType, 'PSTHs')
     
     for k = indices
-        path = ['C:\Users\asa\Documents\MATLAB\' fileList{k}];
+        path = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
         load(path, 'outerSeq','innerSeq')
         [~,~,~,repPsthData,repPsthStdData] = laserDelay_tuningCurve_firstAnalysis(path,'PSTH');
         for ch = channels';
@@ -269,11 +269,11 @@ elseif strcmp(plotType, 'PSTHs')
             title(['Experiment: ' fileList{k}(73:end-4) ' - Channel ' num2str(ch) ])
             hold off
             if doSave
-                if ~isdir(['C:\Users\asa\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\' fileList{k}(73:98) '\keep\'])
-                    mkdir(['C:\Users\asa\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\' fileList{k}(73:98) '\keep\']);
+                if ~isdir(['C:\Users\polley_lab\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\' fileList{k}(73:98) '\keep\'])
+                    mkdir(['C:\Users\polley_lab\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\' fileList{k}(73:98) '\keep\']);
                 end
                 set(gcf,'position',[0,-1000,1200,1920]);
-                export_fig(['C:\Users\asa\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\' fileList{k}(73:98) '\keep\' fileList{k}(73:end-4) '-channel_' num2str(ch) '.png'])
+                export_fig(['C:\Users\polley_lab\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\' fileList{k}(73:98) '\keep\' fileList{k}(73:end-4) '-channel_' num2str(ch) '.png'])
                 close
             end
         end

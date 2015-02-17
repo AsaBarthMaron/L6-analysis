@@ -1,8 +1,8 @@
-function [summaryResponses,startingBinExp] = inclusionCritera(fileList,indices,mode)
+function [summaryResponses,startingBinExp] = inclusionCritera(fileList,indices)
 % For each experiment passed to the function
 
 for k = indices
-    path = ['C:\Users\asa\Documents\MATLAB\' fileList{k}];
+    path = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
     load(path, 'outerSeq','innerSeq')
     [~,~,psthData] = laserDelay_tuningCurve_firstAnalysis(path,'PSTH',5);
     channels = 1:16;
@@ -77,7 +77,7 @@ for k = indices
     toneResponsesChansExp{k} = toneResponsiveChans;
     toneResponsesExp = sum(toneResponsiveChans')';
     startingBinExp(k,:) = startingBinChans;
-    summaryResponses{k} = find(toneResponsesExp>=15);
+    summaryResponses{k} = find(toneResponsesExp>=12);
     clear toneResponsiveChans;
 end
 

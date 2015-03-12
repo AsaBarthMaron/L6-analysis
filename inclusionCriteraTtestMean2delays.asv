@@ -55,7 +55,7 @@ for k = indices
     end
     toneResponsesChansExp{k} = toneResponsiveChans;
     toneResponsesExp = sum(toneResponsiveChans')';
-    summaryResponses{k} = find(toneResponsesExp>=(ceil(size(meanPSTHs,1)/2)));
+    summaryResponses{k} = find(toneResponsesExp>=();
     pValsChansExp{k} = pValsChans;
     clear toneResponsiveChans pValsChans;
 end

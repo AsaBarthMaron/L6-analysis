@@ -1,5 +1,5 @@
 function [masterDataExp,slaveDataExp] = laserDelay_tuningCurve_secondAnalysisTtest(indices,toneResponses,doSave)
-fileList = descendingFileList('modLaserdelay');
+fileList = descendingFileList('modWidth');
 
 for k = indices;
     path = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];

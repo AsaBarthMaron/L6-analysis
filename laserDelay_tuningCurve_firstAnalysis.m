@@ -188,7 +188,7 @@ elseif strcmp(speed,'smoothPSTH')
                         % Calculate spontaneous spike rate
                         fr_spntns(i,1)=length(find(and(fr_t>start_points(1)+200,fr_t<=end_points(1)+200)))*1000/bin_ms;
                         fr_t(find(fr_t <= 0)) = 1/1000;
-                        fr_t(find(fr_t>3500)) = 3500;
+                        fr_t(find(fr_t>str2num(dacInt.TotalDuration))) = str2num(dacInt.TotalDuration);
                         tmpRaster = zeros(dacInt.SampleRate * (str2num(dacInt.TotalDuration)/10000),1);
                         tmpRaster(ceil(fr_t*(dacInt.SampleRate/10000))) = 1;
                         psth_t(:,i) = downsample(quickPSTH(tmpRaster,binSize*10),10)*(1000/binSize);
@@ -312,10 +312,10 @@ elseif strcmp(speed,'PSTH')
                         % Calculate spontaneous spike rate
                         fr_spntns(i,1)=length(find(and(fr_t>start_points(1)+200,fr_t<=end_points(1)+200)))*1000/bin_ms;
                         fr_t(find(fr_t <= 0)) = 1/1000;
-                        fr_t(find(fr_t>3500)) = 3500;
+                        fr_t(find(fr_t>str2num(dacInt.TotalDuration))) = str2num(dacInt.TotalDuration);
                         tmpRaster = zeros(dacInt.SampleRate * (str2num(dacInt.TotalDuration)/10000),1);
                         tmpRaster(ceil(fr_t*(dacInt.SampleRate/10000))) = 1;
-                        psth_t(:,i) = histc(find(tmpRaster>0),1:(binSize*10):35000)*(1000/binSize);
+                        psth_t(:,i) = histc(find(tmpRaster>0),1:(binSize*10):(str2num(dacInt.TotalDuration)*10))*(1000/binSize);
                         clear  fr_t tmpRaster;
                     end
                 end

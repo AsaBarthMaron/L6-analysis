@@ -1,4 +1,4 @@
-function plotAnddoSaveGraphs(fileList,indices, channels, plotType,doSave)
+function plotAnddoSaveGraphs(fileList,indices, channels, plotType,doSave,binSize)
 
 if strcmp(plotType,'heatmaps')
     for k = indices
@@ -149,7 +149,7 @@ elseif strcmp(plotType, 'smoothPSTHs')
     for k = indices
         path = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
         load(path, 'outerSeq','innerSeq')
-        [~,~,~,repPsthData,repPsthStdData] = laserDelay_tuningCurve_firstAnalysis(path,'smoothPSTH');
+        [~,~,~,repPsthData,repPsthStdData] = laserDelay_tuningCurve_firstAnalysis(path,'smoothPSTH',binSize);
         channels = 4;
         
         % Pick a channel and average the PSTHs across repetitions
@@ -157,7 +157,7 @@ elseif strcmp(plotType, 'smoothPSTHs')
         repStdPSTHs = repPsthStdData{channels};
         % Average the PSTHs for a given channel and each delay of all
         % tones
-        for i = 1:17
+        for i = 1:size(repPsthData{1},1)
             for j = 1:8
                 repNum(j) = size(repPSTHs{i,j},1);
             end
@@ -178,7 +178,7 @@ elseif strcmp(plotType, 'smoothPSTHs')
         figure
         spacer = 3*repAvgStdPSTHs*scalingFactor;
         hold on
-        for i =1:17
+        for i =1:size(repPsthData{1},1)
             alpha = .8;
             plot(squeeze(repAvgPSTHs{i}*scalingFactor)'+(i*spacer),'color',[0 0 0]+alpha)
             plot(mean(repAvgPSTHs{i}*scalingFactor)+(i*spacer),'linewidth',2,'color',[0 0 0])
@@ -204,7 +204,7 @@ elseif strcmp(plotType, 'PSTHs')
     for k = indices
         path = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
         load(path, 'outerSeq','innerSeq')
-        [~,~,~,repPsthData,repPsthStdData] = laserDelay_tuningCurve_firstAnalysis(path,'PSTH');
+        [~,~,~,repPsthData,repPsthStdData] = laserDelay_tuningCurve_firstAnalysis(path,'PSTH',binSize);
         for ch = channels';
             
             % Pick a channel and average the PSTHs across repetitions
@@ -212,7 +212,7 @@ elseif strcmp(plotType, 'PSTHs')
             repStdPSTHs = repPsthStdData{ch};
             % Average the PSTHs for a given channel and each delay of all
             % tones
-            for i = 1:17
+            for i = 1:size(repPsthData{1},1)
                 for j = 1:8
                     repNum(j) = size(repPSTHs{i,j},1);
                 end
@@ -235,7 +235,7 @@ elseif strcmp(plotType, 'PSTHs')
             figure
             spacer = 2*repAvgStdPSTHs;
             hold on
-            for i =1:17
+            for i =1:size(repPsthData{1},1)
                 meanRepAvgPSTHs = mean(repAvgPSTHs{i});
                 % Find spontaneous FR std (at 2000ms - bin 400)
                 spntStd = std(meanRepAvgPSTHs(400:499));

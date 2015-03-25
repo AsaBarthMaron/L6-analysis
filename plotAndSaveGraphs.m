@@ -144,18 +144,20 @@ elseif strcmp(plotType, 'heatmapDiff')
     end
     
 elseif strcmp(plotType, 'smoothPSTHs')
-    scalingFactor = 1000/7;
+    scalingFactor = 1000/binSize;
     
     for k = indices
         path = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
         load(path, 'outerSeq','innerSeq')
         [~,~,~,repPsthData,repPsthStdData] = laserDelay_tuningCurve_firstAnalysis(path,'smoothPSTH',binSize);
-        channels = 4;
         
         % Pick a channel and average the PSTHs across repetitions
         repPSTHs = repPsthData{channels};
         repStdPSTHs = repPsthStdData{channels};
-        % Average the PSTHs for a given channel and each delay of all
+        laserOnset = str2num(innerSeq.master.expression);
+        laserWidth = str2num(innerSeq.slave(1,1).expression)/1000;
+            
+        % Average the PSTHs for a given channel and each delay of allf
         % tones
         for i = 1:size(repPsthData{1},1)
             for j = 1:8
@@ -182,7 +184,7 @@ elseif strcmp(plotType, 'smoothPSTHs')
             alpha = .8;
             plot(squeeze(repAvgPSTHs{i}*scalingFactor)'+(i*spacer),'color',[0 0 0]+alpha)
             plot(mean(repAvgPSTHs{i}*scalingFactor)+(i*spacer),'linewidth',2,'color',[0 0 0])
-            h = patch([(150+(i*50)) (150+(i*50)) (550+(i*50)) (550+(i*50))],[((-spacer/6)+(i*spacer)) ((spacer/1.4)+(i*spacer)) ((spacer/1.4)+(i*spacer)) ((-spacer/6)+(i*spacer))],'b');
+            h = patch([laserOnset(i) laserOnset(i) (laserOnset(i)+laserWidth(i)) (laserOnset(i)+laserWidth(i))],[((-spacer/6)+(i*spacer)) ((spacer/1.4)+(i*spacer)) ((spacer/1.4)+(i*spacer)) ((-spacer/6)+(i*spacer))],'b');
             set(h, 'EdgeColor','none')
             set(h, 'FaceAlpha',.3)
         end
@@ -210,6 +212,9 @@ elseif strcmp(plotType, 'PSTHs')
             % Pick a channel and average the PSTHs across repetitions
             repPSTHs = repPsthData{ch};
             repStdPSTHs = repPsthStdData{ch};
+            laserOnset = str2num(innerSeq.master.expression);
+            laserWidth = str2num(innerSeq.slave(1,1).expression)/1000;
+            
             % Average the PSTHs for a given channel and each delay of all
             % tones
             for i = 1:size(repPsthData{1},1)
@@ -259,7 +264,7 @@ elseif strcmp(plotType, 'PSTHs')
                 %               plot(squeeze(traces)'+(i*spacer),'color',[0 0 0]+alpha)
                 plot(meanTrace+(i*spacer),'k','linewidth',2)
                 plot(1:3500,3*spntStd*ones(3500,1)+(i*spacer)+spntMean,'k--')
-                h = patch([(150+(i*50)) (150+(i*50)) (550+(i*50)) (550+(i*50))],[((-spacer/6)+(i*spacer)) ((spacer/1.4)+(i*spacer)) ((spacer/1.4)+(i*spacer)) ((-spacer/6)+(i*spacer))],'b');
+                h = patch([laserOnset(i) laserOnset(i) (laserOnset(i)+laserWidth(i)) (laserOnset(i)+laserWidth(i))],[((-spacer/6)+(i*spacer)) ((spacer/1.4)+(i*spacer)) ((spacer/1.4)+(i*spacer)) ((-spacer/6)+(i*spacer))],'b');
                 set(h, 'EdgeColor','none')
                 set(h, 'FaceAlpha',.3)
             end

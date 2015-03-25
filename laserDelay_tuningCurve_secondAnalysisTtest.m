@@ -1,5 +1,4 @@
-function [masterDataExp,slaveDataExp] = laserDelay_tuningCurve_secondAnalysisTtest(indices,toneResponses,doSave)
-fileList = descendingFileList('modWidth');
+function [masterDataExp,slaveDataExp] = laserDelay_tuningCurve_secondAnalysisTtest(indices,toneResponses,doSave,fileList)
 
 for k = indices;
     path = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
@@ -114,12 +113,6 @@ for k = indices;
     %% slave
     chanCounter = 1;
     for chan = 1:6:96;
-        if find(toneResponses{k} == chanCounter) > 0
-            isIncluded = 1;
-        else
-            isIncluded = 0;
-        end
-        
         for i=trials
             outer_stim_seq_vector_slave(i)=SCL(i).outerSlave(1);
         end
@@ -286,5 +279,6 @@ for k = indices;
         save(['C:\Users\polley_lab\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\'  fileList{k}(73:end-4) '-2ndRndHeatmap.fig'])
         close
     end
+    clearvars -except fileList indices toneResponses doSave masterDataExp slaveDataExp
 end
 

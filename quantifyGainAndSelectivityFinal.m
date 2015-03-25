@@ -1,9 +1,9 @@
 %function[L23masterData, L4masterData, L5masterData, L6masterData] = quantifyGain(indices,toneResponses,startingBins,channelAssignment) 
-%    for k = indices
-%        path = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
-%        [~, ~, psthData(k,:),~,~] = laserDelay_tuningCurve_firstAnalysis(path,'smoothPSTH',5)
-%    end
-%[masterDataExp,slaveDataExp] = laserDelay_tuningCurve_secondAnalysisTtest(indices,toneResponses,0)
+    for k = indices
+        path = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
+        [~, ~, psthData(k,:),~,~] = laserDelay_tuningCurve_firstAnalysis(path,'smoothPSTH',5)
+    end
+[masterDataExp,slaveDataExp] = laserDelay_tuningCurve_secondAnalysisTtest(indices,toneResponses,0,fileList)
 close all
 L23masterData = [];
 L4masterData = [];
@@ -113,7 +113,7 @@ L6psth =  L6psth./maxPsth;
 %% Calculate ALDR/RLDR
 
 for i = 1:length(L23masterData)
-    tmp = find(mean(L23masterData{i},1) == max(mean(L23masterData{i},1)));
+    tmp = find(nanmean(L23masterData{i},1) == max(nanmean(L23masterData{i},1)));
     BFL23masterData(i) = tmp(1);
     clear tmp;
     for j = 1:size(L23masterData{i},1)
@@ -131,7 +131,7 @@ for i = 1:length(L23masterData)
 end
 
 for i = 1:length(L23slaveData)
-    tmp = find(mean(L23slaveData{i},1) == max(mean(L23slaveData{i},1)));
+    tmp = find(nanmean(L23slaveData{i},1) == max(nanmean(L23slaveData{i},1)));
     BFL23slaveData(i) = tmp(1);
     clear tmp;
     for j = 1:size(L23slaveData{i},1)
@@ -150,7 +150,7 @@ end
 L23ALDR = ((L23masterALDR-L23slaveALDR)./L23slaveALDR)*100;
 L23ALDR(L23ALDR == inf) = NaN;
 for i = 1:length(L4masterData)
-    tmp = find(mean(L4masterData{i},1) == max(mean(L4masterData{i},1)));
+    tmp = find(nanmean(L4masterData{i},1) == max(nanmean(L4masterData{i},1)));
     BFL4masterData(i) = tmp(1);
     clear tmp;
     for j = 1:size(L4masterData{i},1)
@@ -168,7 +168,7 @@ for i = 1:length(L4masterData)
 end
 
 for i = 1:length(L4slaveData)
-    tmp = find(mean(L4slaveData{i},1) == max(mean(L4slaveData{i},1)));
+    tmp = find(nanmean(L4slaveData{i},1) == max(nanmean(L4slaveData{i},1)));
     BFL4slaveData(i) = tmp(1);
     clear tmp;
     for j = 1:size(L4slaveData{i},1)
@@ -188,7 +188,7 @@ L4ALDR = ((L4masterALDR-L4slaveALDR)./L4slaveALDR)*100;
 L4ALDR(L4ALDR == inf) = NaN;
 
 for i = 1:length(L5masterData)
-    tmp = find(mean(L5masterData{i},1) == max(mean(L5masterData{i},1)));
+    tmp = find(nanmean(L5masterData{i},1) == max(nanmean(L5masterData{i},1)));
     BFL5masterData(i) = tmp(1);
     clear tmp;
     for j = 1:size(L5masterData{i},1)
@@ -206,7 +206,7 @@ for i = 1:length(L5masterData)
 end
 
 for i = 1:length(L5slaveData)
-    tmp = find(mean(L5slaveData{i},1) == max(mean(L5slaveData{i},1)));
+    tmp = find(nanmean(L5slaveData{i},1) == max(nanmean(L5slaveData{i},1)));
     BFL5slaveData(i) = tmp(1);
     clear tmp;
     for j = 1:size(L5slaveData{i},1)
@@ -226,7 +226,7 @@ L5ALDR = ((L5masterALDR-L5slaveALDR)./L5slaveALDR)*100;
 L5ALDR(L5ALDR == inf) = NaN;
 
 for i = 1:length(L6masterData)
-    tmp = find(mean(L6masterData{i},1) == max(mean(L6masterData{i},1)));
+    tmp = find(nanmean(L6masterData{i},1) == max(nanmean(L6masterData{i},1)));
     BFL6masterData(i) = tmp(1);
     clear tmp;
     for j = 1:size(L6masterData{i},1)
@@ -244,7 +244,7 @@ for i = 1:length(L6masterData)
 end
 
 for i = 1:length(L6slaveData)
-    tmp = find(mean(L6slaveData{i},1) == max(mean(L6slaveData{i},1)));
+    tmp = find(nanmean(L6slaveData{i},1) == max(nanmean(L6slaveData{i},1)));
     BFL6slaveData(i) = tmp(1);
     clear tmp;
     for j = 1:size(L6slaveData{i},1)

@@ -19,9 +19,10 @@ if strcmp(speed,'fast')
         end
         
         % Define start and end points
-        start_points=[stimChans{1, 1}.Gate.Delay+2,stimChans{1, 4}.Gate.Delay+2];
-        end_points=[(stimChans{1, 1}.Gate.Width+stimChans{1, 1}.Gate.Delay)-2,(stimChans{1, 1}.Gate.Width+stimChans{1, 4}.Gate.Delay)-2];
-        
+       % start_points=[stimChans{1, 1}.Gate.Delay+2,stimChans{1, 4}.Gate.Delay+2];
+       % end_points=[(stimChans{1, 1}.Gate.Width+stimChans{1, 1}.Gate.Delay)-2,(stimChans{1, 1}.Gate.Width+stimChans{1, 4}.Gate.Delay)-2];
+        start_points=[stimChans{1, 1}.Gate.Delay+16,stimChans{1, 4}.Gate.Delay+16];
+        end_points=[(stimChans{1, 1}.Gate.Width+stimChans{1, 1}.Gate.Delay)-5,(stimChans{1, 1}.Gate.Width+stimChans{1, 4}.Gate.Delay)-5];
         
         
         bin_ms=end_points(1)-start_points(1);

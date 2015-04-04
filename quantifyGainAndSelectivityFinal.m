@@ -1,10 +1,10 @@
 %function[L23masterData, L4masterData, L5masterData, L6masterData] = quantifyGain(indices,toneResponses,startingBins,channelAssignment) 
-    for k = indices
-        path = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
-        [~, ~, psthData(k,:),~,~] = laserDelay_tuningCurve_firstAnalysis(path,'smoothPSTH',5)
-    end
-[masterDataExp,slaveDataExp] = laserDelay_tuningCurve_secondAnalysisTtest(indices,toneResponses,0,fileList)
-close all
+  %  for k = indices
+  %      path = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
+  %      [~, ~, psthData(k,:),~,~] = laserDelay_tuningCurve_firstAnalysis(path,'smoothPSTH',5)
+%    end
+%[masterDataExp,slaveDataExp] = laserDelay_tuningCurve_secondAnalysisTtest(indices,toneResponses,0,fileList)
+%close all
 L23masterData = [];
 L4masterData = [];
 L5masterData = [];
@@ -294,8 +294,79 @@ L6ALDR(L6ALDR == inf) = NaN;
     semL6psth = std(L6psth)/sqrt(size(L6psth,1));
     
 
-    
+% Together
+figure
+alpha = .9;
+
+subplot = @(m,n,p) subtightplot (m, n, p, [0.08 0.05], [0.05 0.06], [0.05 0.02]);
+subplot(2,2,1)
+area([0:50:800,800:-50:0],[meanL23ALDR-semL23ALDR,meanL23ALDR(end:-1:1)+semL23ALDR(end:-1:1)],'facecolor',[ 0 alpha 0],'linestyle','none');
+hold on
+area([0:50:800,800:-50:0],[meanL23gainData-semL23gainData,meanL23gainData(end:-1:1)+semL23gainData(end:-1:1)],'facecolor',[ alpha 0 0],'linestyle','none');
+area([-100:1:800,800:-1:-100],[meanL23psth(100:1000)-semL23psth(100:1000),meanL23psth(1000:-1:100)+semL23psth(1000:-1:100)]*550,'facecolor',[0 0 1],'linestyle','none');
+% plot(0:50:800,fliplr(L23gainData')','color',[0 0 0]+alpha)
+plot(0:50:800,meanL23ALDR,'linewidth',3,'color',[0 .3 0])
+plot(0:50:800,meanL23gainData,'linewidth',3,'color',[.3 0 0])
+plot(-100:800,meanL23psth(100:1000)*550,'linewidth',3,'color',[0 0 .3])
+plot(-100:50:800,zeros(19,1),'k--')
+title('Layer 2/3')
+xlabel('Tone onset (relative to laser onset)')
+ylabel('Gain')
+set(gca,'box','off')
+axis([-100 800 -120 650])
+
+subplot = @(m,n,p) subtightplot (m, n, p, [0.08 0.05], [0.05 0.06], [0.05 0.02]);
+subplot(2,2,2)
+area([0:50:800,800:-50:0],[meanL4ALDR-semL4ALDR,meanL4ALDR(end:-1:1)+semL4ALDR(end:-1:1)],'facecolor',[ 0 alpha 0],'linestyle','none');
+hold on
+area([0:50:800,800:-50:0],[meanL4gainData-semL4gainData,meanL4gainData(end:-1:1)+semL4gainData(end:-1:1)],'facecolor',[ alpha 0 0],'linestyle','none');
+area([-100:1:800,800:-1:-100],[meanL4psth(100:1000)-semL4psth(100:1000),meanL4psth(1000:-1:100)+semL4psth(1000:-1:100)]*550,'facecolor',[0 0 1],'linestyle','none');
+% plot(0:50:800,fliplr(L4gainData')','color',[0 0 0]+alpha)
+plot(0:50:800,meanL4ALDR,'linewidth',3,'color',[0 .3 0])
+plot(0:50:800,meanL4gainData,'linewidth',3,'color',[.3 0 0])
+plot(-100:800,meanL4psth(100:1000)*550,'linewidth',3,'color',[0 0 .3])
+plot(-100:50:800,zeros(19,1),'k--')
+title('Layer 4')
+xlabel('Tone onset (relative to laser onset)')
+ylabel('Gain')
+set(gca,'box','off')
+axis([-100 800 -120 650])
+
+subplot = @(m,n,p) subtightplot (m, n, p, [0.08 0.05], [0.05 0.06], [0.05 0.02]);
+subplot(2,2,3)
+area([0:50:800,800:-50:0],[meanL5ALDR-semL5ALDR,meanL5ALDR(end:-1:1)+semL5ALDR(end:-1:1)],'facecolor',[ 0 alpha 0],'linestyle','none');
+hold on
+area([0:50:800,800:-50:0],[meanL5gainData-semL5gainData,meanL5gainData(end:-1:1)+semL5gainData(end:-1:1)],'facecolor',[ alpha 0 0],'linestyle','none');
+area([-100:1:800,800:-1:-100],[meanL5psth(100:1000)-semL5psth(100:1000),meanL5psth(1000:-1:100)+semL5psth(1000:-1:100)]*550,'facecolor',[0 0 1],'linestyle','none');
+% plot(0:50:800,fliplr(L5gainData')','color',[0 0 0]+alpha)
+plot(0:50:800,meanL5ALDR,'linewidth',3,'color',[0 .3 0])
+plot(0:50:800,meanL5gainData,'linewidth',3,'color',[.3 0 0])
+plot(-100:800,meanL5psth(100:1000)*550,'linewidth',3,'color',[0 0 .3])
+plot(-100:50:800,zeros(19,1),'k--')
+title('Layer 5')
+xlabel('Tone onset (relative to laser onset)')
+ylabel('Gain')
+set(gca,'box','off')
+axis([-100 800 -150 650])
+
+subplot = @(m,n,p) subtightplot (m, n, p, [0.08 0.05], [0.05 0.06], [0.05 0.02]);
+subplot(2,2,4)
+area([0:50:800,800:-50:0],[meanL6ALDR-semL6ALDR,meanL6ALDR(end:-1:1)+semL6ALDR(end:-1:1)],'facecolor',[ 0 alpha 0],'linestyle','none');
+hold on
+area([0:50:800,800:-50:0],[meanL6gainData-semL6gainData,meanL6gainData(end:-1:1)+semL6gainData(end:-1:1)],'facecolor',[ alpha 0 0],'linestyle','none');
+area([-100:1:800,800:-1:-100],[meanL6psth(100:1000)-semL6psth(100:1000),meanL6psth(1000:-1:100)+semL6psth(1000:-1:100)]*550,'facecolor',[0 0 1],'linestyle','none');
+% plot(0:50:800,fliplr(L6gainData')','color',[0 0 0]+alpha)
+plot(0:50:800,meanL6ALDR,'linewidth',3,'color',[0 .3 0])
+plot(0:50:800,meanL6gainData,'linewidth',3,'color',[.3 0 0])
+plot(-100:800,meanL6psth(100:1000)*550,'linewidth',3,'color',[0 0 .3])
+plot(-100:50:800,zeros(19,1),'k--')
+title('Layer 6')
+xlabel('Tone onset (relative to laser onset)')
+ylabel('Gain')
+set(gca,'box','off')
+axis([-100 800 -120 650])    
 %% Plots
+
 
 figure
 rgbVals = 0:0.0625:1;
@@ -535,77 +606,7 @@ ylabel('Gain')
 set(gca,'box','off')
 axis([-100 800 -100 300])
 
-% Together
-figure
-alpha = .9;
 
-subplot = @(m,n,p) subtightplot (m, n, p, [0.08 0.05], [0.05 0.06], [0.05 0.02]);
-subplot(2,2,1)
-area([0:50:800,800:-50:0],[meanL23ALDR-semL23ALDR,meanL23ALDR(end:-1:1)+semL23ALDR(end:-1:1)],'facecolor',[ 0 alpha 0],'linestyle','none');
-hold on
-area([0:50:800,800:-50:0],[meanL23gainData-semL23gainData,meanL23gainData(end:-1:1)+semL23gainData(end:-1:1)],'facecolor',[ alpha 0 0],'linestyle','none');
-area([-100:1:800,800:-1:-100],[meanL23psth(100:1000)-semL23psth(100:1000),meanL23psth(1000:-1:100)+semL23psth(1000:-1:100)]*550,'facecolor',[0 0 1],'linestyle','none');
-% plot(0:50:800,fliplr(L23gainData')','color',[0 0 0]+alpha)
-plot(0:50:800,meanL23ALDR,'linewidth',3,'color',[0 .3 0])
-plot(0:50:800,meanL23gainData,'linewidth',3,'color',[.3 0 0])
-plot(-100:800,meanL23psth(100:1000)*550,'linewidth',3,'color',[0 0 .3])
-plot(-100:50:800,zeros(19,1),'k--')
-title('Layer 2/3')
-xlabel('Tone onset (relative to laser onset)')
-ylabel('Gain')
-set(gca,'box','off')
-axis([-100 800 -120 650])
-
-subplot = @(m,n,p) subtightplot (m, n, p, [0.08 0.05], [0.05 0.06], [0.05 0.02]);
-subplot(2,2,2)
-area([0:50:800,800:-50:0],[meanL4ALDR-semL4ALDR,meanL4ALDR(end:-1:1)+semL4ALDR(end:-1:1)],'facecolor',[ 0 alpha 0],'linestyle','none');
-hold on
-area([0:50:800,800:-50:0],[meanL4gainData-semL4gainData,meanL4gainData(end:-1:1)+semL4gainData(end:-1:1)],'facecolor',[ alpha 0 0],'linestyle','none');
-area([-100:1:800,800:-1:-100],[meanL4psth(100:1000)-semL4psth(100:1000),meanL4psth(1000:-1:100)+semL4psth(1000:-1:100)]*550,'facecolor',[0 0 1],'linestyle','none');
-% plot(0:50:800,fliplr(L4gainData')','color',[0 0 0]+alpha)
-plot(0:50:800,meanL4ALDR,'linewidth',3,'color',[0 .3 0])
-plot(0:50:800,meanL4gainData,'linewidth',3,'color',[.3 0 0])
-plot(-100:800,meanL4psth(100:1000)*550,'linewidth',3,'color',[0 0 .3])
-plot(-100:50:800,zeros(19,1),'k--')
-title('Layer 4')
-xlabel('Tone onset (relative to laser onset)')
-ylabel('Gain')
-set(gca,'box','off')
-axis([-100 800 -120 650])
-
-subplot = @(m,n,p) subtightplot (m, n, p, [0.08 0.05], [0.05 0.06], [0.05 0.02]);
-subplot(2,2,3)
-area([0:50:800,800:-50:0],[meanL5ALDR-semL5ALDR,meanL5ALDR(end:-1:1)+semL5ALDR(end:-1:1)],'facecolor',[ 0 alpha 0],'linestyle','none');
-hold on
-area([0:50:800,800:-50:0],[meanL5gainData-semL5gainData,meanL5gainData(end:-1:1)+semL5gainData(end:-1:1)],'facecolor',[ alpha 0 0],'linestyle','none');
-area([-100:1:800,800:-1:-100],[meanL5psth(100:1000)-semL5psth(100:1000),meanL5psth(1000:-1:100)+semL5psth(1000:-1:100)]*550,'facecolor',[0 0 1],'linestyle','none');
-% plot(0:50:800,fliplr(L5gainData')','color',[0 0 0]+alpha)
-plot(0:50:800,meanL5ALDR,'linewidth',3,'color',[0 .3 0])
-plot(0:50:800,meanL5gainData,'linewidth',3,'color',[.3 0 0])
-plot(-100:800,meanL5psth(100:1000)*550,'linewidth',3,'color',[0 0 .3])
-plot(-100:50:800,zeros(19,1),'k--')
-title('Layer 5')
-xlabel('Tone onset (relative to laser onset)')
-ylabel('Gain')
-set(gca,'box','off')
-axis([-100 800 -150 650])
-
-subplot = @(m,n,p) subtightplot (m, n, p, [0.08 0.05], [0.05 0.06], [0.05 0.02]);
-subplot(2,2,4)
-area([0:50:800,800:-50:0],[meanL6ALDR-semL6ALDR,meanL6ALDR(end:-1:1)+semL6ALDR(end:-1:1)],'facecolor',[ 0 alpha 0],'linestyle','none');
-hold on
-area([0:50:800,800:-50:0],[meanL6gainData-semL6gainData,meanL6gainData(end:-1:1)+semL6gainData(end:-1:1)],'facecolor',[ alpha 0 0],'linestyle','none');
-area([-100:1:800,800:-1:-100],[meanL6psth(100:1000)-semL6psth(100:1000),meanL6psth(1000:-1:100)+semL6psth(1000:-1:100)]*550,'facecolor',[0 0 1],'linestyle','none');
-% plot(0:50:800,fliplr(L6gainData')','color',[0 0 0]+alpha)
-plot(0:50:800,meanL6ALDR,'linewidth',3,'color',[0 .3 0])
-plot(0:50:800,meanL6gainData,'linewidth',3,'color',[.3 0 0])
-plot(-100:800,meanL6psth(100:1000)*550,'linewidth',3,'color',[0 0 .3])
-plot(-100:50:800,zeros(19,1),'k--')
-title('Layer 6')
-xlabel('Tone onset (relative to laser onset)')
-ylabel('Gain')
-set(gca,'box','off')
-axis([-100 800 -120 650])
 
 % figure
 % 

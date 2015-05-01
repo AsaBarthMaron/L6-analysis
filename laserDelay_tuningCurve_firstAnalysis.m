@@ -1,6 +1,6 @@
-function[masterData, slaveData, psthData,repPsthData,repPsthStdData] = laserDelay_tuningCurve_firstAnalysis(path,speed,binSize)
+function[masterData, slaveData, psthData,repPsthData,repPsthStdData] = laserDelay_tuningCurve_firstAnalysis(filePath,speed,binSize)
 
-load(path);
+load(filePath);
 
 if strcmp(speed,'fast')
     % Create a vector (trials) containing the indexes of all the "real" trials
@@ -189,8 +189,8 @@ elseif strcmp(speed,'smoothPSTH')
                         % Calculate spontaneous spike rate
                         fr_spntns(i,1)=length(find(and(fr_t>start_points(1)+200,fr_t<=end_points(1)+200)))*1000/bin_ms;
                         fr_t(find(fr_t <= 0)) = 1/1000;
-                        fr_t(find(fr_t>str2num(dacInt.TotalDuration))) = str2num(dacInt.TotalDuration);
-                        tmpRaster = zeros(dacInt.SampleRate * (str2num(dacInt.TotalDuration)/10000),1);
+                        fr_t(find(fr_t>dacInt.TotalDuration)) = dacInt.TotalDuration;
+                        tmpRaster = zeros(dacInt.SampleRate * (dacInt.TotalDuration/10000),1);
                         tmpRaster(ceil(fr_t*(dacInt.SampleRate/10000))) = 1;
                         psth_t(:,i) = downsample(quickPSTH(tmpRaster,binSize*10),10)*(1000/binSize);
                         clear  fr_t tmpRaster;
@@ -313,10 +313,10 @@ elseif strcmp(speed,'PSTH')
                         % Calculate spontaneous spike rate
                         fr_spntns(i,1)=length(find(and(fr_t>start_points(1)+200,fr_t<=end_points(1)+200)))*1000/bin_ms;
                         fr_t(find(fr_t <= 0)) = 1/1000;
-                        fr_t(find(fr_t>str2num(dacInt.TotalDuration))) = str2num(dacInt.TotalDuration);
-                        tmpRaster = zeros(dacInt.SampleRate * (str2num(dacInt.TotalDuration)/10000),1);
+                        fr_t(find(fr_t>dacInt.TotalDuration)) = dacInt.TotalDuration;
+                        tmpRaster = zeros(dacInt.SampleRate * (dacInt.TotalDuration/10000),1);
                         tmpRaster(ceil(fr_t*(dacInt.SampleRate/10000))) = 1;
-                        psth_t(:,i) = histc(find(tmpRaster>0),1:(binSize*10):(str2num(dacInt.TotalDuration)*10))*(1000/binSize);
+                        psth_t(:,i) = histc(find(tmpRaster>0),1:(binSize*10):(dacInt.TotalDuration*10))*(1000/binSize);
                         clear  fr_t tmpRaster;
                     end
                 end
@@ -403,7 +403,7 @@ for chan = 1:6:96;
                     fr_t_slave=SCL(curr_outer_slave(stim_seq_vector_sorted_slave(rep(i)))).t(ch_choosen_slave)- SCL(curr_outer_slave(stim_seq_vector_sorted_slave(rep(i)))).t(1);
                     fr_slave(i,1)=length(find(and(fr_t_slave>start_points(2),fr_t_slave<=end_points(2))))*1000/bin_ms;
                     fr_spntns_slave(i,1)=length(find(and(fr_t_slave>start_points(2)+200,fr_t_slave<=end_points(2)+200)))*1000/bin_ms;
-                    %                 tmpRaster_slave = zeros(dacInt.SampleRate * (str2num(dacInt.TotalDuration)/1000),1);
+                    %                 tmpRaster_slave = zeros(dacInt.SampleRate * (dacInt.TotalDuration/1000),1);
                     %                 tmpRaster_slave(round(fr_t_slave*(dacInt.SampleRate/1000))) = 1;
                     %                 raster_t_slave(:,i) = tmpRaster_slave;
                     clear tmpRaster_slave fr_t_slave;

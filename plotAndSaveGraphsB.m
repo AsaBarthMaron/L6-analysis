@@ -1,4 +1,4 @@
-function plotAndSaveGraphs(fileList,indices, channels, plotType,doSave,binSize)
+function plotAndSaveGraphsB(fileList,indices, channels, plotType,doSave,binSize)
 
 if strcmp(plotType,'heatmaps')
     for k = indices
@@ -148,15 +148,14 @@ elseif strcmp(plotType, 'smoothPSTHs')
     
     for k = indices
         path = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
-        load(path, 'outerSeq','innerSeq','stimChans')
+        load(path, 'outerSeq','innerSeq')
         [~,~,~,repPsthData,repPsthStdData] = laserDelay_tuningCurve_firstAnalysis(path,'smoothPSTH',binSize);
         
         % Pick a channel and average the PSTHs across repetitions
         repPSTHs = repPsthData{channels};
         repStdPSTHs = repPsthStdData{channels};
-        laserOnset = innerSeq.master.startVal:innerSeq.master.stepSize:innerSeq.master.endVal;
-        laserWidth = ones(size(repPsthData{1},1),1)*50;
-     
+        laserOnset = str2num(innerSeq.master.expression);
+        laserWidth = str2num(innerSeq.slave(1,1).expression)/1000;
             
         % Average the PSTHs for a given channel and each delay of allf
         % tones
@@ -190,8 +189,8 @@ elseif strcmp(plotType, 'smoothPSTHs')
             set(h, 'FaceAlpha',.3)
         end
         y = get(gca,'YLim')
-        plot(stimChans{1}.Gate.Delay*ones(y(2)+1,1),(y(1):y(2)),'--','linewidth',2)
-        plot(stimChans{4}.Gate.Delay*ones(y(2)+1,1),(y(1):y(2)),'--r','linewidth',2)
+        plot(1000*ones(y(2)+1,1),(y(1):y(2)),'--','linewidth',2)
+        plot(3000*ones(y(2)+1,1),(y(1):y(2)),'--r','linewidth',2)
         title(['Channel ' num2str(channels)])
         hold off
         if doSave

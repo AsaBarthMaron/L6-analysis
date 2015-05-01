@@ -1,9 +1,9 @@
 function [summaryResponses,pValsChansExp] = inclusionCriteraTtestMean2delays(fileList,indices)
 
 % for k = indices
-%     path = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
-%     load(path, 'outerSeq','innerSeq')
-%     [~,~,psthData] = laserDelay_tuningCurve_firstAnalysis(path,'PSTH',1);
+%     filePath = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
+%     load(filePath, 'outerSeq','innerSeq')
+%     [~,~,psthData] = laserDelay_tuningCurve_firstAnalysis(filePath,'PSTH',1);
 %     channels = 1:16;
 %     
 %     for i = channels;
@@ -24,9 +24,15 @@ function [summaryResponses,pValsChansExp] = inclusionCriteraTtestMean2delays(fil
 %  
 
 for k = indices
-    path = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
-    load(path, 'outerSeq','innerSeq','stimChans')
-    [~,~,psthData] = laserDelay_tuningCurve_firstAnalysis(path,'PSTH',1);
+    filePath{k} = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
+end
+psthDataExps = {};
+parfor k = indices
+    [~,~,psthDataExps{k}] = laserDelay_tuningCurve_firstAnalysis(filePath{k},'PSTH',1);
+end
+for k = indices
+    psthData = psthDataExps{k};
+    load(filePath{k}, 'outerSeq','innerSeq','stimChans')
     channels = 1:16;
     
     for i = channels;
@@ -36,7 +42,7 @@ for k = indices
         
         j=1;
         for h = 1:2:(size(meanPSTHs,1)-1)
-            [H,P] = ttest2(mean([spntFR(h,:);spntFR(h+1,:)]),mean([toneFR(h,:);toneFR(h+1,:)]),.05,'left');
+            [H,P] = ttest2(mean([spntFR(h,:);spntFR(h+1,:)]),mean([toneFR(h,:);toneFR(h+1,:)]),.01,'left');
             toneResponsive(j) = H;
             pVals(j) = P;
             j = j+1;
@@ -44,7 +50,7 @@ for k = indices
         end
         if mod(size(meanPSTHs,1),2)
             [H,P] = ttest2(mean([spntFR(size(meanPSTHs,1)-1,:);spntFR(size(meanPSTHs,1),:)]),...
-                mean([toneFR(size(meanPSTHs,1)-1,:);toneFR(size(meanPSTHs,1),:)]),.05,'left');
+                mean([toneFR(size(meanPSTHs,1)-1,:);toneFR(size(meanPSTHs,1),:)]),.01,'left');
             toneResponsive(size(meanPSTHs,1)) = H;
             pVals(size(meanPSTHs,1)) = P;   
             clear P H;

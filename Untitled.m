@@ -1,4 +1,4 @@
-[masterData, slaveData] = laserDelay_tuningCurve_firstAnalysis('C:\Users\polley_lab\Downloads\asa030615-1-10-tuningcurve.mat','fast',5);
+[masterData, slaveData] = laserDelay_tuningCurve_firstAnalysis('C:\Users\asa\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Experimental\Ntsr1-cre#037\asa030615\asa030615-1-21-tuningcurve.mat','fast',5);
 
         for i = 1:length(masterData)
             diffData{i} = (masterData{i}-slaveData{i})./slaveData{i};

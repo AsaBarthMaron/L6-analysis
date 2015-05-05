@@ -1,13 +1,13 @@
 %function[L23masterData, L4masterData, L5masterData, L6masterData] = quantifyGain(indices,toneResponses,startingBins,channelAssignment) 
-for k = indices
-    filePath{k} = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
-end
-psthData = {};
-parfor k = indices
-    [~,~,psthData(k,:)] = laserDelay_tuningCurve_firstAnalysis(filePath{k},'smoothPSTH',2);
-end    
-[masterDataExp,slaveDataExp] = laserDelay_tuningCurve_secondAnalysisTtest(indices,toneResponses,0,fileList)
-close all
+%for k = indices
+%    filePath{k} = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
+%end
+%psthData = {};
+%parfor k = indices
+%    [~,~,psthData(k,:)] = laserDelay_tuningCurve_firstAnalysis(filePath{k},'smoothPSTH',2);
+%end    
+%[masterDataExp,slaveDataExp] = laserDelay_tuningCurve_secondAnalysisTtest(indices,toneResponses,0,fileList)
+%close all
 L23masterData = [];
 L4masterData = [];
 L5masterData = [];
@@ -32,20 +32,24 @@ for k = indices
         
         if (max(channelAssignment(k,1:3) == ch)) && (max(toneResponses{k} == ch))
             % Layer 2/3
-            L23masterData = [L23masterData masterDataExp(k,ch)];
-            L23slaveData = [L23slaveData slaveDataExp(k,ch)];
+            zeroVal = min(min([masterDataExp{k,ch} slaveDataExp{k,ch}]));
+            L23masterData = [L23masterData {masterDataExp{k,ch}-zeroVal}];
+            L23slaveData = [L23slaveData {slaveDataExp{k,ch}-zeroVal}];
             L23psthData = [L23psthData psthData(k,ch)];
         elseif (max(channelAssignment(k,4:5) == ch)) && (max(toneResponses{k} == ch))
-            L4masterData = [L4masterData masterDataExp(k,ch)];
-            L4slaveData = [L4slaveData slaveDataExp(k,ch)];
+            zeroVal = min(min([masterDataExp{k,ch} slaveDataExp{k,ch}]));
+            L4masterData = [L4masterData {masterDataExp{k,ch}-zeroVal}];
+            L4slaveData = [L4slaveData {slaveDataExp{k,ch}-zeroVal}];
             L4psthData = [L4psthData psthData(k,ch)];
         elseif (max(channelAssignment(k,6:8) == ch)) && (max(toneResponses{k} == ch))
-            L5masterData = [L5masterData masterDataExp(k,ch)];
-            L5slaveData = [L5slaveData slaveDataExp(k,ch)];
+            zeroVal = min(min([masterDataExp{k,ch} slaveDataExp{k,ch}]));
+            L5masterData = [L5masterData {masterDataExp{k,ch}-zeroVal}];
+            L5slaveData = [L5slaveData {slaveDataExp{k,ch}-zeroVal}];
             L5psthData = [L5psthData psthData(k,ch)];
         elseif (max(channelAssignment(k,9:11) == ch)) && (max(toneResponses{k} == ch))
-            L6masterData = [L6masterData masterDataExp(k,ch)];
-            L6slaveData = [L6slaveData slaveDataExp(k,ch)];
+            zeroVal = min(min([masterDataExp{k,ch} slaveDataExp{k,ch}]));
+            L6masterData = [L6masterData {masterDataExp{k,ch}-zeroVal}];
+            L6slaveData = [L6slaveData {slaveDataExp{k,ch}-zeroVal}];
             L6psthData = [L6psthData psthData(k,ch)];
         end
     end
@@ -365,6 +369,7 @@ xlabel('Tone onset (relative to laser onset)')
 ylabel('Gain')
 set(gca,'box','off')
 axis([0 400 -120 650])
+%plot(0:25:400,fliplr(gSelectivity(:,1)')*100)
 
 subplot = @(m,n,p) subtightplot (m, n, p, [0.08 0.05], [0.05 0.06], [0.05 0.02]);
 subplot(2,2,2)
@@ -382,6 +387,7 @@ xlabel('Tone onset (relative to laser onset)')
 ylabel('Gain')
 set(gca,'box','off')
 axis([0 400 -120 650])
+%plot(0:25:400,fliplr(gSelectivity(:,2)')*100)
 
 subplot = @(m,n,p) subtightplot (m, n, p, [0.08 0.05], [0.05 0.06], [0.05 0.02]);
 subplot(2,2,3)
@@ -399,6 +405,7 @@ xlabel('Tone onset (relative to laser onset)')
 ylabel('Gain')
 set(gca,'box','off')
 axis([0 400 -120 650])
+%plot(0:25:400,fliplr(gSelectivity(:,3)')*100)
 
 subplot = @(m,n,p) subtightplot (m, n, p, [0.08 0.05], [0.05 0.06], [0.05 0.02]);
 subplot(2,2,4)
@@ -416,6 +423,7 @@ xlabel('Tone onset (relative to laser onset)')
 ylabel('Gain')
 set(gca,'box','off')
 axis([0 400 -120 650])   
+%plot(0:25:400,fliplr(gSelectivity(:,4)')*100)
 %% Plots
 
 

@@ -1,12 +1,15 @@
 function [masterDataExp,slaveDataExp] = laserDelay_tuningCurve_secondAnalysisTtest(indices,toneResponses,doSave,fileList)
 
 for k = indices;
-    path = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
-    load(path);
+    filePath = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
+    load(filePath);
     
     % Define start and end points
-    start_points=[stimChans{1, 1}.Gate.Delay+16,stimChans{1, 4}.Gate.Delay+16];
-    end_points=[(stimChans{1, 1}.Gate.Width+stimChans{1, 1}.Gate.Delay)-5,(stimChans{1, 1}.Gate.Width+stimChans{1, 4}.Gate.Delay)-5];
+    tone_onset = [stimChans{1, 1}.Gate.Delay,stimChans{1, 4}.Gate.Delay];
+    tone_offset = [(stimChans{1, 1}.Gate.Width+stimChans{1, 1}.Gate.Delay),(stimChans{1, 1}.Gate.Width+stimChans{1, 4}.Gate.Delay)];
+    start_points = tone_onset + 16;
+    end_points = tone_offset -5;
+    spnt_windowSize = 3*(tone_offset(2)-tone_onset(2));
     
     % Create a vector (trials) containing the indexes of all the "real" trials
     chanCounter = 1;
@@ -22,11 +25,12 @@ for k = indices;
             outer_stim_seq_vector(i)=SCL(i).outerIndex;
         end
         
-        
         bin_ms=end_points(1)-start_points(1);
+        spntnsRate = cell(length(innerSeq.master.values),1);
         
         % Loop through each unique outer loop element
         for f=1:length(unique( outer_stim_seq_vector))
+
             
             % Find indexes of all outer loop values equivalent to the current
             % unique outer loop value.
@@ -75,7 +79,8 @@ for k = indices;
                         % start and end points
                         fr(i,1)=length(find(and(fr_t>start_points(1),fr_t<=end_points(1))))*1000/bin_ms;
                         % Calculate spontaneous spike rate
-                        fr_spntns(i,1)=length(find(and(fr_t>start_points(1)+200,fr_t<=end_points(1)+200)))*1000/bin_ms;
+                        fr_spntns(i,1)=length(find(and(fr_t>(tone_onset(2)-spnt_windowSize),fr_t<tone_onset(2))))*1000/(spnt_windowSize);
+                        % fr(i,1) = fr(i,1) - fr_spntns(i,1);
                         clear  fr_t;
                     end
                 end
@@ -85,13 +90,17 @@ for k = indices;
                 fra_values(j,f)=nanmean(fr);
                 fra_SEM(j,f)=std(fr)/sqrt(length(fr));
                 %fra_values(j,f)=sum(fr);
-                fra_spntns(j,f)=nanmean(fr_spntns);
-                fra_values_se(j,f)=nanmean(fr)/sqrt(length(fr));
+                %fra_spntns(j,f)=nanmean(fr_spntns);
+                spntnsRate{j} = [spntnsRate{j};fr_spntns];
+                %fra_values_se(j,f)=nanmean(fr)/sqrt(length(fr));
                 
-                clear fr fr_t
+                clear fr fr_t fr_spntns
             end
-            
         end
+        for j = 1:length(innerSeq.master.values)
+          %  fra_values(j,:) = fra_values(j,:) - mean(spntnsRate{j});
+        end
+            
         
         % Plot it
         
@@ -116,6 +125,8 @@ for k = indices;
         for i=trials
             outer_stim_seq_vector_slave(i)=SCL(i).outerSlave(1);
         end
+        
+        spntnsRate = cell(length(innerSeq.master.values),1);
         
         for f=1:length(unique( outer_stim_seq_vector_slave))
             
@@ -148,20 +159,25 @@ for k = indices;
                     else
                         fr_t_slave=SCL(curr_outer_slave(stim_seq_vector_sorted_slave(rep(i)))).t(ch_choosen_slave)- SCL(curr_outer_slave(stim_seq_vector_sorted_slave(rep(i)))).t(1);
                         fr_slave(i,1)=length(find(and(fr_t_slave>start_points(2),fr_t_slave<=end_points(2))))*1000/bin_ms;
-                        fr_spntns_slave(i,1)=length(find(and(fr_t_slave>start_points(2)+200,fr_t_slave<=end_points(2)+200)))*1000/bin_ms;
+                        fr_spntns_slave(i,1)=length(find(and(fr_t_slave>(tone_onset(2)-spnt_windowSize),fr_t_slave<tone_onset(2))))*1000/(spnt_windowSize);
+                        fr_slave(i,1) = fr_slave(i,1) - fr_spntns_slave(i,1);
                         clear tmpRaster_slave fr_t_slave;
                     end
                 end
                 
                 fra_values_slave(j,f)=nanmean(fr_slave);
                 fra_SEM_slave(j,f)=std(fr_slave)/sqrt(length(fr_slave));
-                fra_spntns_slave(j,f)=nanmean(fr_spntns_slave);
-                fra_values_se_slave(j,f)=nanmean(fr_slave)/sqrt(length(fr_slave));
+                spntnsRate{j} = [spntnsRate{j};fr_spntns_slave];
+                %fra_spntns_slave(j,f)=nanmean(fr_spntns_slave);
+                %fra_values_se_slave(j,f)=nanmean(fr_slave)/sqrt(length(fr_slave));
                 
                 %         rasters(j,f) = {mean(raster_t_slave')};
-                clear fr fr_t
+                clear fr_slave fr_t_slave fr_spntns_slave
             end
             
+        end
+        for j = 1:length(innerSeq.master.values)
+          %  fra_values_slave(j,:) = fra_values_slave(j,:) - mean(spntnsRate{j});
         end
         
         % figure;imagesc(1:length(outerSeq.slave(1).values),innerSeq.slave(1).values,(fra_values_slave))

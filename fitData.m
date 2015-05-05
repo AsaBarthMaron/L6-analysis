@@ -22,7 +22,8 @@ function[sdMaster,sdSlave,rsqMaster,rsqSlave] = fitData(masterData,slaveData)
                 for i = size(master,1):-1:1
                     try
                         yTmp = master(i,:)./max(master(i,:));
-                        yIntrp = interp1(1:8,yTmp,1:.1:8,'spline');
+                        yIntrp = yTmp;
+                    %    yIntrp = interp1(1:8,yTmp,1:.1:8,'spline');
                     %    s = fitoptions('Lower',[0,0,0],...
                      %                  'Upper',[Inf,Inf,Inf]);
                      %   f = fittype('gauss1','options',s);      
@@ -34,9 +35,15 @@ function[sdMaster,sdSlave,rsqMaster,rsqSlave] = fitData(masterData,slaveData)
                         plot(yIntrp)
                         hold on
                         plot(fitobject,'k')
-
+                    catch
+                        sdMaster{j}(i,k) = nan;
+                        rsqMaster{j}(i,k) = nan; 
+                        [muName 'master' num2str((i*25)-25) ' ms']
+                    end
+                    try
                         yTmp = slave(i,:)./max(slave(i,:));
-                        yIntrp = interp1(1:8,yTmp,1:.1:8,'spline');
+                        yIntrp = yTmp;
+                        %yIntrp = interp1(1:8,yTmp,1:.1:8,'spline');
                         [fitobject, gof] = fit((1:length(yIntrp))',yIntrp','gauss1');
                         sdSlave{j}(i,k) = fitobject.a1;
                         rsqSlave{j}(i,k) = gof.rsquare;      
@@ -50,21 +57,16 @@ function[sdMaster,sdSlave,rsqMaster,rsqSlave] = fitData(masterData,slaveData)
                         subplot(9,2,1)
                         title(muName,'Interpreter','none')
                     catch
-                        muName
-                        break
+                        sdSlave{j}(i,k) = nan;
+                        rsqSlave{j}(i,k) = nan;
+                        [muName 'slave' num2str((i*25)-25) ' ms']
                     end
                 end
                 set(gcf,'position',[0,100,1200,1920]);
-                export_fig(['E:\MATLAB\cortex_genericlaser+tuningmoddelay\Images\Norm_tuning_curves_C\' muName ])
+                export_fig(['C:\Users\polley_lab\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\Norm_tuning_curves_C\' muName ])
                 close
         end
     end
 end
 
-for i = 1:4
-    sdMaster{i}(sdMaster{i} == 0) = nan;
-    sdSlave{i}(sdSlave{i} == 0) = nan;
-    gaussSelectivity(:,i) = nanmean((sdMaster{i}-sdSlave{i})./sdSlave{i},2);
-end
-    
 

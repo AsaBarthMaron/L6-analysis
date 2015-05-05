@@ -98,7 +98,7 @@ for k = indices;
             end
         end
         for j = 1:length(innerSeq.master.values)
-          %  fra_values(j,:) = fra_values(j,:) - mean(spntnsRate{j});
+            fra_values(j,:) = fra_values(j,:) - mean(spntnsRate{j});
         end
             
         
@@ -160,7 +160,7 @@ for k = indices;
                         fr_t_slave=SCL(curr_outer_slave(stim_seq_vector_sorted_slave(rep(i)))).t(ch_choosen_slave)- SCL(curr_outer_slave(stim_seq_vector_sorted_slave(rep(i)))).t(1);
                         fr_slave(i,1)=length(find(and(fr_t_slave>start_points(2),fr_t_slave<=end_points(2))))*1000/bin_ms;
                         fr_spntns_slave(i,1)=length(find(and(fr_t_slave>(tone_onset(2)-spnt_windowSize),fr_t_slave<tone_onset(2))))*1000/(spnt_windowSize);
-                        fr_slave(i,1) = fr_slave(i,1) - fr_spntns_slave(i,1);
+                        % fr_slave(i,1) = fr_slave(i,1) - fr_spntns_slave(i,1);
                         clear tmpRaster_slave fr_t_slave;
                     end
                 end
@@ -177,7 +177,7 @@ for k = indices;
             
         end
         for j = 1:length(innerSeq.master.values)
-          %  fra_values_slave(j,:) = fra_values_slave(j,:) - mean(spntnsRate{j});
+            fra_values_slave(j,:) = fra_values_slave(j,:) - mean(spntnsRate{j});
         end
         
         % figure;imagesc(1:length(outerSeq.slave(1).values),innerSeq.slave(1).values,(fra_values_slave))

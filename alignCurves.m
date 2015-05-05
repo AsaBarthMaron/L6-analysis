@@ -1,3 +1,5 @@
+masterData = [{L23masterData} {L4masterData} {L5masterData} {L6masterData}];
+slaveData = [{L23slaveData} {L4slaveData} {L5slaveData} {L6slaveData}];
 for layerIndex = 1:4
     numMUs = length(masterData{layerIndex});
     numTones = size(masterData{layerIndex}{1},2);

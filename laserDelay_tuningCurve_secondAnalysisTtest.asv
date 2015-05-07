@@ -10,7 +10,7 @@ for k = indices;
     start_points = tone_onset + 10;
     end_points = tone_offset -5;
     spnt_windowSize = 3*(tone_offset(2)-tone_onset(2));
-    %minRate = 1000/bin_ms;
+    minRate = *1000/bin_ms;
     
     % Create a vector (trials) containing the indexes of all the "real" trials
     chanCounter = 1;

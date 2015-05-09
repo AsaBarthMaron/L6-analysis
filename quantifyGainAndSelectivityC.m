@@ -22,71 +22,71 @@ L4psthData = [];
 L5psthData = [];
 L6psthData = [];
 
-% % No manipulation
-% for k = indices
-%     
-%     %     for i = toneResponses{k}
-%     %     	gainQuant{k,i} = (mean(slaveDataExp)-mean(masterDataExp{}))/(mean(slaveDataExp)+mean(masterDataExp{}))
-%     %     end
-%     % First reorganize all the data from exp>channel format to layer>exp
-%     % format
-%     for ch = [9,8,10,7,13,4,12,5,15,2,16,1,14,3,11,6]
-%         
-%         if (max(channelAssignment(k,1:3) == ch)) && (max(toneResponses{k} == ch))
-%             % Layer 2/3
-%             L23masterData = [L23masterData masterDataExp(k,ch)];
-%             L23slaveData = [L23slaveData slaveDataExp(k,ch)];
-%             L23psthData = [L23psthData psthData(k,ch)];
-%         elseif (max(channelAssignment(k,4:5) == ch)) && (max(toneResponses{k} == ch))
-%             L4masterData = [L4masterData masterDataExp(k,ch)];
-%             L4slaveData = [L4slaveData slaveDataExp(k,ch)];
-%             L4psthData = [L4psthData psthData(k,ch)];
-%         elseif (max(channelAssignment(k,6:8) == ch)) && (max(toneResponses{k} == ch))
-%             L5masterData = [L5masterData masterDataExp(k,ch)];
-%             L5slaveData = [L5slaveData slaveDataExp(k,ch)];
-%             L5psthData = [L5psthData psthData(k,ch)];
-%         elseif (max(channelAssignment(k,9:11) == ch)) && (max(toneResponses{k} == ch))
-%             L6masterData = [L6masterData masterDataExp(k,ch)];
-%             L6slaveData = [L6slaveData slaveDataExp(k,ch)];
-%             L6psthData = [L6psthData psthData(k,ch)];
-%         end
-%     end
-% end
-
- %Zero shifted down.
+% No manipulation
 for k = indices
     
-%         for i = toneResponses{k}
-%         	gainQuant{k,i} = (mean(slaveDataExp)-mean(masterDataExp{}))/(mean(slaveDataExp)+mean(masterDataExp{}))
-%         end
-%     First reorganize all the data from exp>channel format to layer>exp
-%     format
+    %     for i = toneResponses{k}
+    %     	gainQuant{k,i} = (mean(slaveDataExp)-mean(masterDataExp{}))/(mean(slaveDataExp)+mean(masterDataExp{}))
+    %     end
+    % First reorganize all the data from exp>channel format to layer>exp
+    % format
     for ch = [9,8,10,7,13,4,12,5,15,2,16,1,14,3,11,6]
         
         if (max(channelAssignment(k,1:3) == ch)) && (max(toneResponses{k} == ch))
             % Layer 2/3
-            zeroVal = min(min([masterDataExp{k,ch} slaveDataExp{k,ch}]));
-            L23masterData = [L23masterData {masterDataExp{k,ch}-zeroVal+.5}];
-            L23slaveData = [L23slaveData {slaveDataExp{k,ch}-zeroVal+.5}];
+            L23masterData = [L23masterData masterDataExp(k,ch)];
+            L23slaveData = [L23slaveData slaveDataExp(k,ch)];
             L23psthData = [L23psthData psthData(k,ch)];
         elseif (max(channelAssignment(k,4:5) == ch)) && (max(toneResponses{k} == ch))
-            zeroVal = min(min([masterDataExp{k,ch} slaveDataExp{k,ch}]));
-            L4masterData = [L4masterData {masterDataExp{k,ch}-zeroVal+.5}];
-            L4slaveData = [L4slaveData {slaveDataExp{k,ch}-zeroVal+.5}];
+            L4masterData = [L4masterData masterDataExp(k,ch)];
+            L4slaveData = [L4slaveData slaveDataExp(k,ch)];
             L4psthData = [L4psthData psthData(k,ch)];
         elseif (max(channelAssignment(k,6:8) == ch)) && (max(toneResponses{k} == ch))
-            zeroVal = min(min([masterDataExp{k,ch} slaveDataExp{k,ch}]));
-            L5masterData = [L5masterData {masterDataExp{k,ch}-zeroVal+.5}];
-            L5slaveData = [L5slaveData {slaveDataExp{k,ch}-zeroVal+.5}];
+            L5masterData = [L5masterData masterDataExp(k,ch)];
+            L5slaveData = [L5slaveData slaveDataExp(k,ch)];
             L5psthData = [L5psthData psthData(k,ch)];
         elseif (max(channelAssignment(k,9:11) == ch)) && (max(toneResponses{k} == ch))
-            zeroVal = min(min([masterDataExp{k,ch} slaveDataExp{k,ch}]));
-            L6masterData = [L6masterData {masterDataExp{k,ch}-zeroVal+.5}];
-            L6slaveData = [L6slaveData {slaveDataExp{k,ch}-zeroVal+.5}];
+            L6masterData = [L6masterData masterDataExp(k,ch)];
+            L6slaveData = [L6slaveData slaveDataExp(k,ch)];
             L6psthData = [L6psthData psthData(k,ch)];
         end
     end
 end
+
+%  %Zero shifted down.
+% for k = indices
+%     
+% %         for i = toneResponses{k}
+% %         	gainQuant{k,i} = (mean(slaveDataExp)-mean(masterDataExp{}))/(mean(slaveDataExp)+mean(masterDataExp{}))
+% %         end
+% %     First reorganize all the data from exp>channel format to layer>exp
+% %     format
+%     for ch = [9,8,10,7,13,4,12,5,15,2,16,1,14,3,11,6]
+%         
+%         if (max(channelAssignment(k,1:3) == ch)) && (max(toneResponses{k} == ch))
+%             % Layer 2/3
+%             zeroVal = min(min([masterDataExp{k,ch} slaveDataExp{k,ch}]));
+%             L23masterData = [L23masterData {masterDataExp{k,ch}-zeroVal+.5}];
+%             L23slaveData = [L23slaveData {slaveDataExp{k,ch}-zeroVal+.5}];
+%             L23psthData = [L23psthData psthData(k,ch)];
+%         elseif (max(channelAssignment(k,4:5) == ch)) && (max(toneResponses{k} == ch))
+%             zeroVal = min(min([masterDataExp{k,ch} slaveDataExp{k,ch}]));
+%             L4masterData = [L4masterData {masterDataExp{k,ch}-zeroVal+.5}];
+%             L4slaveData = [L4slaveData {slaveDataExp{k,ch}-zeroVal+.5}];
+%             L4psthData = [L4psthData psthData(k,ch)];
+%         elseif (max(channelAssignment(k,6:8) == ch)) && (max(toneResponses{k} == ch))
+%             zeroVal = min(min([masterDataExp{k,ch} slaveDataExp{k,ch}]));
+%             L5masterData = [L5masterData {masterDataExp{k,ch}-zeroVal+.5}];
+%             L5slaveData = [L5slaveData {slaveDataExp{k,ch}-zeroVal+.5}];
+%             L5psthData = [L5psthData psthData(k,ch)];
+%         elseif (max(channelAssignment(k,9:11) == ch)) && (max(toneResponses{k} == ch))
+%             zeroVal = min(min([masterDataExp{k,ch} slaveDataExp{k,ch}]));
+%             L6masterData = [L6masterData {masterDataExp{k,ch}-zeroVal+.5}];
+%             L6slaveData = [L6slaveData {slaveDataExp{k,ch}-zeroVal+.5}];
+%             L6psthData = [L6psthData psthData(k,ch)];
+%         end
+%     end
+% end
 
 %  % Rectified  
 % for k = indices

@@ -1,5 +1,5 @@
-function [masterDataExp,slaveDataExp,minRate] = laserDelay_tuningCurve_secondAnalysisTtest(indices,toneResponses,doSave,fileList)
-
+function [masterDataExp,slaveDataExp] = laserDelay_tuningCurve_secondAnalysisTtest(indices,toneResponses,doSave,fileList)
+spntnsRateExp = {};
 for k = indices;
     filePath = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
     load(filePath);
@@ -99,9 +99,10 @@ for k = indices;
             end
         end
         for j = 1:length(innerSeq.master.values)
-            fra_values(j,:) = fra_values(j,:) - mean(spntnsRate{j});
+            %fra_values(j,:) = fra_values(j,:) - mean(spntnsRate{j});
+            masterSpntns{chanCounter}(j) = mean(spntnsRate{j});
         end
-            
+        
         
         % Plot it
         
@@ -178,7 +179,8 @@ for k = indices;
             
         end
         for j = 1:length(innerSeq.master.values)
-            fra_values_slave(j,:) = fra_values_slave(j,:) - mean(spntnsRate{j});
+           %fra_values_slave(j,:) = fra_values_slave(j,:) - mean(spntnsRate{j});
+           % slaveSpntns{chanCounter}(j) = mean(spntnsRate{j});
         end
         
         % figure;imagesc(1:length(outerSeq.slave(1).values),innerSeq.slave(1).values,(fra_values_slave))
@@ -195,6 +197,8 @@ for k = indices;
     end
     masterDataExp(k,:) = masterData;
     slaveDataExp(k,:) = slaveData;
+    spntnsRateExp(k,:) = masterSpntns;
+
     
     
     
@@ -287,15 +291,15 @@ for k = indices;
     xlabel('Frequency (KHz)')
     subplot(13,3,39)
     xlabel('Frequency (KHz)')
-    
-    if doSave
-        if ~isdir(['C:\Users\polley_lab\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\' fileList{k}(73:98) '\'])
-            mkdir(['C:\Users\polley_lab\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\' fileList{k}(73:98) '\']);
-        end
-       % set(gcf,'position',[0,-1000,1200,1920]);
-        save(['C:\Users\polley_lab\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\'  fileList{k}(73:end-4) '-2ndRndHeatmap.fig'])
-        close
-    end
-    clearvars -except fileList indices toneResponses doSave masterDataExp slaveDataExp
+%     
+%     if doSave
+%         if ~isdir(['C:\Users\polley_lab\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\' fileList{k}(73:98) '\'])
+%             mkdir(['C:\Users\polley_lab\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\' fileList{k}(73:98) '\']);
+%         end
+%        % set(gcf,'position',[0,-1000,1200,1920]);
+%         save(['C:\Users\polley_lab\Documents\MATLAB\cortex_genericlaser+tuningmoddelay\Images\'  fileList{k}(73:end-4) '-2ndRndHeatmap.fig'])
+%         close
+%     end
+     clearvars -except fileList indices toneResponses doSave masterDataExp slaveDataExp spntsRateExp
 end
 

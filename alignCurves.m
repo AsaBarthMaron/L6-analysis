@@ -1,6 +1,6 @@
-masterData = [{L23masterData} {L4masterData} {L5masterData} {L6masterData}];
-slaveData = [{L23slaveData} {L4slaveData} {L5slaveData} {L6slaveData}];
-for layerIndex = 1:4
+% masterData = [{L23masterData} {L4masterData} {L5masterData} {L6masterData}];
+% slaveData = [{L23slaveData} {L4slaveData} {L5slaveData} {L6slaveData}];
+for layerIndex = 1:1
     numMUs = length(masterData{layerIndex});
     numTones = size(masterData{layerIndex}{1},2);
     numSlots = (2*numTones)-1;
@@ -36,7 +36,7 @@ for layerIndex = 1:4
     semAlSlave{layerIndex}(isnan(semAlSlave{layerIndex})) = 0;
 end
 
-for layerIndex = 1:4
+for layerIndex = 1:1
     figure
     subplot = @(m,n,p) subtightplot (m, n, p, [0.02 0.05], [0.03 0.03], [0.05 0.02]);
     relLaserIndex = numDelays;
@@ -63,6 +63,8 @@ for layerIndex = 1:4
         plot(meanAlMaster{layerIndex}(relLaserIndex,:),'color',[0 0 .3],'linewidth',3)
         plot(1:numSlots,zeros(numSlots,1),'k--')
         ylabel([num2str((delayIndex*25)-25) ' ms'])
+        legend('Tone alone','Tone + laser')
+        legend('boxoff')
         
         subplot(9,2,1)
             if layerIndex == 1

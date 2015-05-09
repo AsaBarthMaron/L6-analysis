@@ -1,9 +1,9 @@
-% function[L23masterData, L4masterData, L5masterData, L6masterData] = quantifyGain(indices,toneResponses,startingBins,channelAssignment) 
-%    for k = indices
-%        path = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
-%        [~, ~, psthData(k,:),~,~] = laserDelay_tuningCurve_firstAnalysis(path,'smoothPSTH',5)
-%    end
-% [masterDataExp,slaveDataExp] = laserDelay_tuningCurve_secondAnalysisTtest(indices,toneResponses,0,fileList)
+function[L23masterData, L4masterData, L5masterData, L6masterData] = quantifyGain(indices,toneResponses,startingBins,channelAssignment) 
+   for k = indices
+       path = ['C:\Users\polley_lab\Documents\MATLAB\' fileList{k}];
+       [~, ~, psthData(k,:),~,~] = laserDelay_tuningCurve_firstAnalysis(path,'smoothPSTH',5)
+   end
+[masterDataExp,slaveDataExp] = laserDelay_tuningCurve_secondAnalysisTtest(indices,toneResponses,0,fileList)
 close all
 L23masterData = [];
 L4masterData = [];
